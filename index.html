@@ -6,19 +6,27 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Számológép">
-<meta name="theme-color" content="#000">
-<link rel="apple-touch-icon" sizes="512x512" href="/Calculator_2/apple-touch-icon.png?v=5">
-<link rel="icon" type="image/png" href="/Calculator_2/apple-touch-icon.png?v=5">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#000000">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v6.png">
+<link rel="icon" type="image/png" sizes="180x180" href="./apple-touch-icon-v6.png">
+<link rel="manifest" href="./manifest.webmanifest?v=6">
 <title>Számológép</title>
 <style>
-:root{--s:#1c1c1e;--n:#2c2c2e;--g:#6a6a6d;--o:#ff9f0a;--gap:10px}
+:root{--s:#1c1c1e;--n:#2c2c2e;--g:#6a6a6d;--o:#ff9f0a}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 html,body{margin:0;width:100%;height:100%;background:#000;color:#fff;overflow:hidden}
 body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Arial,sans-serif}
 .app{width:min(100vw,430px);height:100dvh;margin:auto;padding:max(12px,env(safe-area-inset-top)) 15px max(12px,env(safe-area-inset-bottom));display:flex;flex-direction:column;background:#000}
-.top{height:58px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.tb{width:46px;height:46px;border-radius:50%;border:1px solid #323236;background:#171719;color:#fff;display:grid;place-items:center;font-size:24px}
-.display{height:176px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;padding:0 4px 12px;overflow:hidden}.expr{width:100%;min-height:27px;text-align:right;font-size:21px;font-weight:400;color:#a7a7aa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px}.screen{width:100%;text-align:right;font-size:62px;font-weight:300;line-height:1.03;letter-spacing:-2.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sci{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:10px}.basic{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}button{border:0;outline:0;color:#fff;font-family:inherit;display:flex;align-items:center;justify-content:center;padding:0}.k{height:54px;border-radius:27px;background:var(--s);font-size:18px;font-weight:500}.b{height:58px;border-radius:29px;font-size:29px}.num{background:var(--n)}.gray{background:var(--g)}.op{background:var(--o);font-size:31px}.sup{font-size:.62em;position:relative;top:-.46em;margin-left:1px}.root{font-size:24px}@media(max-height:850px){.display{height:154px}.k{height:50px}.b{height:54px}.screen{font-size:56px}.expr{font-size:19px}.sci,.basic{gap:7px}}
+.top{height:58px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.tb{width:46px;height:46px;border-radius:50%;border:1px solid #323236;background:#171719;color:#fff;display:grid;place-items:center;font-size:24px}
+.display{height:176px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;padding:0 4px 12px;overflow:hidden}
+.expr{width:100%;min-height:27px;text-align:right;font-size:20px;color:#a7a7aa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:6px}
+.screen{width:100%;text-align:right;font-size:62px;font-weight:300;line-height:1.03;letter-spacing:-2.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sci{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:10px}.basic{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+button{border:0;outline:0;color:#fff;font-family:inherit;display:flex;align-items:center;justify-content:center;padding:0}
+.k{height:54px;border-radius:27px;background:var(--s);font-size:18px;font-weight:500}.b{height:58px;border-radius:29px;font-size:29px}.num{background:var(--n)}.gray{background:var(--g)}.op{background:var(--o);font-size:31px}.sup{font-size:.62em;position:relative;top:-.46em;margin-left:1px}.root{font-size:24px}
+@media(max-height:850px){.display{height:154px}.k{height:50px}.b{height:54px}.screen{font-size:56px}.expr{font-size:18px}.sci,.basic{gap:7px}}
 </style>
 </head>
 <body>
@@ -26,8 +34,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text"
 <div class="top"><button class="tb" id="hist">↶</button><button class="tb">▦</button></div>
 <div class="display"><div class="expr" id="expr"></div><div class="screen" id="screen">0</div></div>
 <div class="sci">
-<button class="k" data-a="noop">(</button><button class="k" data-a="noop">)</button><button class="k" data-a="mc">mc</button><button class="k" data-a="mplus">m+</button><button class="k" data-a="mminus">m−</button><button class="k" data-a="mr">mr</button>
-<button class="k" data-a="noop">2<span class="sup">nd</span></button><button class="k" data-a="square">x<span class="sup">2</span></button><button class="k" data-a="cube">x<span class="sup">3</span></button><button class="k" data-a="pow">x<span class="sup">y</span></button><button class="k" data-a="exp">e<span class="sup">x</span></button><button class="k" data-a="tenpow">10<span class="sup">x</span></button>
+<button class="k">(</button><button class="k">)</button><button class="k" data-a="mc">mc</button><button class="k" data-a="mplus">m+</button><button class="k" data-a="mminus">m−</button><button class="k" data-a="mr">mr</button>
+<button class="k">2<span class="sup">nd</span></button><button class="k" data-a="square">x<span class="sup">2</span></button><button class="k" data-a="cube">x<span class="sup">3</span></button><button class="k" data-a="pow">x<span class="sup">y</span></button><button class="k" data-a="exp">e<span class="sup">x</span></button><button class="k" data-a="tenpow">10<span class="sup">x</span></button>
 <button class="k" data-a="inv">1⁄x</button><button class="k root" data-a="sqrt">²√x</button><button class="k root" data-a="cuberoot">³√x</button><button class="k root" data-a="yroot">ʸ√x</button><button class="k" data-a="ln">ln</button><button class="k" data-a="log10">log₁₀</button>
 <button class="k" data-a="demo">x!</button><button class="k" data-a="sin">sin</button><button class="k" data-a="cos">cos</button><button class="k" data-a="tan">tan</button><button class="k" data-a="e">e</button><button class="k" data-a="ee">EE</button>
 <button class="k" data-a="rand">Rand</button><button class="k" data-a="sinh">sinh</button><button class="k" data-a="cosh">cosh</button><button class="k" data-a="tanh">tanh</button><button class="k" data-a="pi">π</button><button class="k" data-a="angle" id="angle">Rad</button>
@@ -43,52 +51,73 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text"
 <script>
 (()=>{
 const s=document.getElementById('screen'),eLine=document.getElementById('expr'),aBtn=document.getElementById('angle');
-let c='0',acc=null,op=null,w=false,m=0,mode='Rad',h=[],expression='';
-let navActive=false,branch='main',index=0,returnIndex=0;
-const lesson={
- main:[
-  {title:'Feladat 1 · Főág · 1/7',text:'x² − 5x + 6 = 0'},
-  {title:'Feladat 1 · Főág · 2/7',text:'a = 1, b = −5, c = 6'},
-  {title:'ÚJ KÉPLET · Diszkrimináns',text:'D = b² − 4ac',jump:'disc'},
-  {title:'Feladat 1 · Főág · 4/7',text:'D = 1'},
-  {title:'ÚJ KÉPLET · Gyökképlet',text:'x₁,₂ = (−b ± √D) / 2a',jump:'roots'},
-  {title:'Feladat 1 · Főág · 6/7',text:'x₁ = 3, x₂ = 2'},
-  {title:'KÉSZ · Végeredmény',text:'x = 2 vagy x = 3'}
- ],
- disc:[
-  {title:'Diszkrimináns · 1/4',text:'D = b² − 4ac'},
-  {title:'Diszkrimináns · 2/4',text:'D = (−5)² − 4·1·6'},
-  {title:'Diszkrimináns · 3/4',text:'D = 25 − 24'},
-  {title:'Diszkrimináns · 4/4',text:'D = 1'}
- ],
- roots:[
-  {title:'Gyökképlet · 1/4',text:'x₁,₂ = (−b ± √D) / 2a'},
-  {title:'Gyökképlet · 2/4',text:'x₁,₂ = (5 ± √1) / 2'},
-  {title:'Gyökképlet · 3/4',text:'x₁ = 6/2 = 3'},
-  {title:'Gyökképlet · 4/4',text:'x₂ = 4/2 = 2'}
- ]
-};
+let c='0',acc=null,op=null,w=false,m=0,mode='Rad',history=[],expression='';
+let solve=false,task=0,step=0,transition=false;
+const tasks=[
+ {name:'Feladat 1',problem:'x² − 5x + 6 = 0',steps:[
+  ['Főág · 1/7','a = 1, b = −5, c = 6'],
+  ['ÚJ KÉPLET · Diszkrimináns','D = b² − 4ac'],
+  ['Diszkrimináns · 2/4','D = (−5)² − 4·1·6'],
+  ['Diszkrimináns · 3/4','D = 25 − 24'],
+  ['Diszkrimináns · 4/4','D = 1'],
+  ['ÚJ KÉPLET · Gyökképlet','x₁,₂ = (−b ± √D) / 2a'],
+  ['KÉSZ · Végeredmény','x = 2 vagy x = 3']
+ ]},
+ {name:'Feladat 2',problem:'3x + 2 = 14',steps:[
+  ['Főág · 1/4','3x = 14 − 2'],
+  ['Főág · 2/4','3x = 12'],
+  ['Főág · 3/4','x = 12 ÷ 3'],
+  ['KÉSZ · Végeredmény','x = 4']
+ ]},
+ {name:'Feladat 3',problem:'f(x) = x² + 3x − 4',steps:[
+  ['Főág · 1/4','f′(x) = ?'],
+  ['ÚJ KÉPLET · Deriválás','d/dx(xⁿ) = n·xⁿ⁻¹'],
+  ['Levezetés · 3/4','2x + 3 − 0'],
+  ['KÉSZ · Végeredmény','f′(x) = 2x + 3']
+ ]}
+];
 const opSymbol=o=>o==='+'?'+':o==='-'?'−':o==='*'?'×':o==='/'?'÷':o==='^'?'^':o==='root'?'ʸ√':'';
 const n=()=>Number(c.replace(',','.'));
 const fmt=x=>!Number.isFinite(x)?'Error':(Math.abs(x)<1e-14?0:Number(x.toPrecision(12))).toString().replace('.',',');
-const draw=()=>{s.textContent=c;eLine.textContent=expression;s.style.fontSize=c.length>18?'31px':c.length>14?'39px':c.length>10?'49px':'62px'};
-const showNav=()=>{const item=lesson[branch][index];expression=item.title;c=item.text;w=true;draw()};
-const startNav=()=>{navActive=true;branch='main';index=0;returnIndex=0;showNav()};
-const nextNav=()=>{const arr=lesson[branch];const item=arr[index];if(item.jump){returnIndex=index+1;branch=item.jump;index=0;showNav();return}if(index<arr.length-1){index++;showNav()}else if(branch!=='main'){branch='main';index=Math.min(returnIndex,lesson.main.length-1);showNav()}};
-const prevNav=()=>{if(index>0){index--;showNav()}else if(branch!=='main'){branch='main';index=Math.max(0,returnIndex-1);showNav()}};
-const detailNav=()=>{const item=lesson[branch][index];if(item.jump){returnIndex=index+1;branch=item.jump;index=0;showNav()}else{expression='RÉSZLETEZÉS';c=item.text;draw()}};
-const mainNav=()=>{branch='main';index=Math.max(0,Math.min(returnIndex,lesson.main.length-1));showNav()};
-const leaveNav=()=>{navActive=false;branch='main';index=0;returnIndex=0;c='0';expression='';acc=null;op=null;w=false;draw()};
+const draw=()=>{s.textContent=c;eLine.textContent=expression;s.style.fontSize=c.length>22?'27px':c.length>17?'33px':c.length>12?'43px':'62px'};
+function showTaskIntro(){transition=false;expression=`${tasks[task].name}/${tasks.length} · FELADAT`;c=tasks[task].problem;w=true;draw()}
+function showStep(){const t=tasks[task],st=t.steps[step];expression=`${t.name}/${tasks.length} · ${st[0]}`;c=st[1];w=true;draw()}
+function startSolve(){solve=true;task=0;step=-1;showTaskIntro()}
+function nextSolve(){
+ if(transition){task++;step=-1;showTaskIntro();return}
+ const t=tasks[task];
+ if(step<t.steps.length-1){step++;showStep();return}
+ if(task<tasks.length-1){transition=true;expression=`KÖVETKEZŐ FELADAT · ${task+2}/${tasks.length}`;c=tasks[task+1].problem;draw();return}
+ expression=`MINDEN FELADAT KÉSZ · ${tasks.length}/${tasks.length}`;c=t.steps[t.steps.length-1][1];draw();
+}
+function prevSolve(){
+ if(transition){transition=false;showStep();return}
+ if(step>0){step--;showStep();return}
+ if(step===0){step=-1;showTaskIntro();return}
+ if(task>0){task--;step=tasks[task].steps.length-1;showStep()}
+}
+function detailSolve(){
+ if(step<0){expression=`${tasks[task].name}/${tasks.length} · RÉSZLETEZÉS`;c=tasks[task].problem;draw();return}
+ const st=tasks[task].steps[step];expression=`${tasks[task].name}/${tasks.length} · RÉSZLETEZÉS`;c=st[1];draw()
+}
+function mainSolve(){step=-1;transition=false;showTaskIntro()}
+function leaveSolve(){solve=false;task=0;step=0;transition=false;c='0';expression='';acc=null;op=null;w=false;draw()}
 const set=x=>{c=fmt(x);w=true;draw()};
-const dig=d=>{if(navActive){if(d==='1')nextNav();else if(d==='2')prevNav();else if(d==='3')detailNav();else if(d==='0')mainNav();return}if(c==='Error'||w){c=d;w=false}else if(c==='0')c=d;else if(c.replace(/\D/g,'').length<15)c+=d;if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw()};
-const dec=()=>{if(navActive)return;if(c==='Error'||w){c='0,';w=false}else if(!c.includes(','))c+=',';if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw()};
+const dig=d=>{if(solve){if(d==='1')nextSolve();else if(d==='2')prevSolve();else if(d==='3')detailSolve();else if(d==='0')mainSolve();return}if(c==='Error'||w){c=d;w=false}else if(c==='0')c=d;else if(c.replace(/\D/g,'').length<15)c+=d;if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw()};
+const dec=()=>{if(solve)return;if(c==='Error'||w){c='0,';w=false}else if(!c.includes(','))c+=',';draw()};
 const calc=(x,y,o)=>o==='+'?x+y:o==='-'?x-y:o==='*'?x*y:o==='/'?(y===0?NaN:x/y):o==='^'?x**y:o==='root'?(y===0?NaN:x**(1/y)):y;
-const choose=o=>{if(navActive)return;const v=n();if(op&&!w){acc=calc(acc,v,op);c=fmt(acc)}else acc=v;op=o;w=true;expression=`${fmt(acc)} ${opSymbol(op)}`;draw()};
-const eq=()=>{if(navActive)return;if(op==null||acc==null)return;const x=acc,y=n(),r=calc(x,y,op);expression=`${fmt(x)} ${opSymbol(op)} ${fmt(y)} =`;h.push(`${expression} ${fmt(r)}`);c=fmt(r);acc=null;op=null;w=true;draw()};
-const un=(label,f)=>{if(navActive)return;const before=c,r=f(n());expression=`${label}(${before}) =`;set(r)};
+const choose=o=>{if(solve)return;const v=n();if(op&&!w){acc=calc(acc,v,op);c=fmt(acc)}else acc=v;op=o;w=true;expression=`${fmt(acc)} ${opSymbol(op)}`;draw()};
+const eq=()=>{if(solve||op==null||acc==null)return;const x=acc,y=n(),r=calc(x,y,op);expression=`${fmt(x)} ${opSymbol(op)} ${fmt(y)} =`;history.push(`${expression} ${fmt(r)}`);c=fmt(r);acc=null;op=null;w=true;draw()};
+const un=(label,f)=>{if(solve)return;const before=c,r=f(n());expression=`${label}(${before}) =`;set(r)};
 const ang=x=>mode==='Rad'?x:x*Math.PI/180;
-document.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const A=b.dataset.a,V=b.dataset.v;if(A==='demo'){if(!navActive)startNav();return}if(A==='digit')return dig(V);if(A==='dec')return dec();if(A==='op')return choose(V);if(A==='eq')return eq();switch(A){case'clear':if(navActive){leaveNav();return}c='0';acc=null;op=null;w=false;expression='';draw();break;case'back':if(navActive){leaveNav();return}c=(w||c==='Error')?'0':(c.length>1?c.slice(0,-1):'0');w=false;if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw();break;case'sign':if(navActive)return;if(c!=='0'&&c!=='Error')c=c[0]==='-'?c.slice(1):'-'+c;if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw();break;case'percent':un('%',x=>x/100);break;case'square':un('x²',x=>x*x);break;case'cube':un('x³',x=>x*x*x);break;case'pow':choose('^');break;case'exp':un('eˣ',Math.exp);break;case'tenpow':un('10ˣ',x=>10**x);break;case'inv':un('1/x',x=>x===0?NaN:1/x);break;case'sqrt':un('√',x=>x<0?NaN:Math.sqrt(x));break;case'cuberoot':un('∛',Math.cbrt);break;case'yroot':choose('root');break;case'ln':un('ln',x=>x<=0?NaN:Math.log(x));break;case'log10':un('log₁₀',x=>x<=0?NaN:Math.log10(x));break;case'sin':un('sin',x=>Math.sin(ang(x)));break;case'cos':un('cos',x=>Math.cos(ang(x)));break;case'tan':un('tan',x=>Math.tan(ang(x)));break;case'sinh':un('sinh',Math.sinh);break;case'cosh':un('cosh',Math.cosh);break;case'tanh':un('tanh',Math.tanh);break;case'e':if(navActive)return;c=fmt(Math.E);expression='e =';w=true;draw();break;case'pi':if(navActive)return;c=fmt(Math.PI);expression='π =';w=true;draw();break;case'rand':if(navActive)return;c=fmt(Math.random());expression='Rand =';w=true;draw();break;case'ee':if(navActive)return;choose('*');c='10';w=false;expression=`${fmt(acc)} × 10`;draw();break;case'mc':m=0;break;case'mplus':if(!navActive)m+=n();break;case'mminus':if(!navActive)m-=n();break;case'mr':if(!navActive){c=fmt(m);expression='MR =';w=true;draw()}break;case'angle':if(!navActive){mode=mode==='Rad'?'Deg':'Rad';aBtn.textContent=mode}break;}});
-document.getElementById('hist').onclick=()=>alert(h.length?h.slice(-10).reverse().join('\n'):'Még nincs előzmény.');draw();
+document.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const A=b.dataset.a,V=b.dataset.v;if(A==='demo'){if(!solve)startSolve();return}if(A==='digit')return dig(V);if(A==='dec')return dec();if(A==='op')return choose(V);if(A==='eq')return eq();switch(A){
+case'clear':if(solve)return leaveSolve();c='0';acc=null;op=null;w=false;expression='';draw();break;
+case'back':if(solve)return leaveSolve();c=(w||c==='Error')?'0':(c.length>1?c.slice(0,-1):'0');w=false;draw();break;
+case'sign':if(!solve&&c!=='0'&&c!=='Error'){c=c[0]==='-'?c.slice(1):'-'+c;draw()}break;
+case'percent':un('%',x=>x/100);break;case'square':un('x²',x=>x*x);break;case'cube':un('x³',x=>x*x*x);break;case'pow':choose('^');break;case'exp':un('eˣ',Math.exp);break;case'tenpow':un('10ˣ',x=>10**x);break;case'inv':un('1/x',x=>x===0?NaN:1/x);break;case'sqrt':un('√',x=>x<0?NaN:Math.sqrt(x));break;case'cuberoot':un('∛',Math.cbrt);break;case'yroot':choose('root');break;case'ln':un('ln',x=>x<=0?NaN:Math.log(x));break;case'log10':un('log₁₀',x=>x<=0?NaN:Math.log10(x));break;case'sin':un('sin',x=>Math.sin(ang(x)));break;case'cos':un('cos',x=>Math.cos(ang(x)));break;case'tan':un('tan',x=>Math.tan(ang(x)));break;case'sinh':un('sinh',Math.sinh);break;case'cosh':un('cosh',Math.cosh);break;case'tanh':un('tanh',Math.tanh);break;
+case'e':if(!solve){c=fmt(Math.E);expression='e =';w=true;draw()}break;case'pi':if(!solve){c=fmt(Math.PI);expression='π =';w=true;draw()}break;case'rand':if(!solve){c=fmt(Math.random());expression='Rand =';w=true;draw()}break;case'ee':if(!solve){choose('*');c='10';w=false;draw()}break;case'mc':m=0;break;case'mplus':if(!solve)m+=n();break;case'mminus':if(!solve)m-=n();break;case'mr':if(!solve){c=fmt(m);w=true;draw()}break;case'angle':if(!solve){mode=mode==='Rad'?'Deg':'Rad';aBtn.textContent=mode}break;
+}});
+document.getElementById('hist').onclick=()=>alert(history.length?history.slice(-10).reverse().join('\n'):'Még nincs előzmény.');draw();
 })();
 </script>
 </body>
