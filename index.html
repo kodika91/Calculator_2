@@ -48,7 +48,7 @@ button{border:0;outline:0;color:#fff;font-family:inherit;display:flex;align-item
 (()=>{
 const s=document.getElementById('screen'),eLine=document.getElementById('expr'),aBtn=document.getElementById('angle');
 let c='0',acc=null,op=null,w=false,m=0,mode='Rad',h=[],expression='';
-let demoActive=false,demoStep=0,combo=[];
+let demoActive=false,demoStep=0,comboStage=0;
 const demoSteps=[
   ['f(x) = x² + 3x − 4','f′(x) = ?'],
   ['1. lépés','d/dx(x² + 3x − 4)'],
@@ -60,25 +60,44 @@ const n=()=>Number(c.replace(',','.'));
 const fmt=x=>!Number.isFinite(x)?'Error':(Math.abs(x)<1e-14?0:Number(x.toPrecision(12))).toString().replace('.',',');
 const draw=()=>{s.textContent=c;eLine.textContent=expression;s.style.fontSize=c.length>18?'31px':c.length>14?'39px':c.length>10?'51px':'66px'};
 const showDemo=()=>{const d=demoSteps[Math.min(demoStep,demoSteps.length-1)];expression=d[0];c=d[1];w=true;draw()};
-const startDemo=()=>{demoActive=true;demoStep=0;combo=[];showDemo()};
-const advanceDemo=()=>{if(!demoActive)return;demoStep=Math.min(demoStep+1,demoSteps.length-1);combo=[];showDemo()};
-const leaveDemo=()=>{demoActive=false;demoStep=0;combo=[];expression='';c='0';acc=null;op=null;w=false;draw()};
+const startDemo=()=>{demoActive=true;demoStep=0;comboStage=0;showDemo()};
+const advanceDemo=()=>{if(!demoActive)return;demoStep=Math.min(demoStep+1,demoSteps.length-1);comboStage=0;showDemo()};
+const leaveDemo=()=>{demoActive=false;demoStep=0;comboStage=0;expression='';c='0';acc=null;op=null;w=false;draw()};
 const set=x=>{c=fmt(x);w=true;draw()};
-const dig=d=>{if(demoActive){combo.push(d);if(combo.slice(-3).join('')==='!+1')advanceDemo();return}if(c==='Error'||w){c=d;w=false}else if(c==='0')c=d;else if(c.replace(/\D/g,'').length<15)c+=d;if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw()};
-const dec=()=>{if(demoActive)return;if(c==='Error'||w){c='0,';w=false}else if(!c.includes(','))c+=',';if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw()};
+const dig=d=>{
+  if(demoActive){
+    if(comboStage===2 && d==='1'){advanceDemo();return}
+    comboStage=0;
+    return;
+  }
+  if(c==='Error'||w){c=d;w=false}else if(c==='0')c=d;else if(c.replace(/\D/g,'').length<15)c+=d;
+  if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw()
+};
+const dec=()=>{if(demoActive){comboStage=0;return}if(c==='Error'||w){c='0,';w=false}else if(!c.includes(','))c+=',';if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw()};
 const calc=(x,y,o)=>o==='+'?x+y:o==='-'?x-y:o==='*'?x*y:o==='/'?(y===0?NaN:x/y):o==='^'?x**y:o==='root'?(y===0?NaN:x**(1/y)):y;
-const choose=o=>{if(demoActive){if(o==='+'){combo.push('+');if(combo.slice(-3).join('')==='!+1')advanceDemo()}return}const v=n();if(op&&!w){acc=calc(acc,v,op);c=fmt(acc)}else acc=v;op=o;w=true;expression=`${fmt(acc)} ${opSymbol(op)}`;draw()};
-const eq=()=>{if(demoActive)return;if(op==null||acc==null)return;const x=acc,y=n(),r=calc(x,y,op);expression=`${fmt(x)} ${opSymbol(op)} ${fmt(y)} =`;h.push(`${expression} ${fmt(r)}`);c=fmt(r);acc=null;op=null;w=true;draw()};
+const choose=o=>{
+  if(demoActive){
+    if(comboStage===1 && o==='+'){comboStage=2;return}
+    comboStage=0;
+    return;
+  }
+  const v=n();if(op&&!w){acc=calc(acc,v,op);c=fmt(acc)}else acc=v;op=o;w=true;expression=`${fmt(acc)} ${opSymbol(op)}`;draw()
+};
+const eq=()=>{if(demoActive){comboStage=0;return}if(op==null||acc==null)return;const x=acc,y=n(),r=calc(x,y,op);expression=`${fmt(x)} ${opSymbol(op)} ${fmt(y)} =`;h.push(`${expression} ${fmt(r)}`);c=fmt(r);acc=null;op=null;w=true;draw()};
 const un=(label,f)=>{if(demoActive)return;const before=c;const r=f(n());expression=`${label}(${before}) =`;set(r)};
 const ang=x=>mode==='Rad'?x:x*Math.PI/180;
 document.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const A=b.dataset.a,V=b.dataset.v;
-  if(A==='demo'){if(!demoActive)startDemo();else{combo.push('!');if(combo.slice(-3).join('')==='!+1')advanceDemo()}return}
+  if(A==='demo'){
+    if(!demoActive){startDemo();return}
+    comboStage=1;
+    return;
+  }
   if(A==='digit')return dig(V);if(A==='dec')return dec();if(A==='op')return choose(V);if(A==='eq')return eq();
   switch(A){
     case'clear': if(demoActive){leaveDemo();return} c='0';acc=null;op=null;w=false;expression='';draw();break;
     case'back': if(demoActive){leaveDemo();return} c=(w||c==='Error')?'0':(c.length>1?c.slice(0,-1):'0');w=false;if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw();break;
-    case'sign':if(demoActive)return;if(c!=='0'&&c!=='Error')c=c[0]==='-'?c.slice(1):'-'+c;if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw();break;
-    case'percent':un('%',x=>x/100);break;case'square':un('x²',x=>x*x);break;case'cube':un('x³',x=>x*x*x);break;case'pow':choose('^');break;case'exp':un('eˣ',Math.exp);break;case'tenpow':un('10ˣ',x=>10**x);break;case'inv':un('1/x',x=>x===0?NaN:1/x);break;case'sqrt':un('√',x=>x<0?NaN:Math.sqrt(x));break;case'cuberoot':un('∛',Math.cbrt);break;case'yroot':choose('root');break;case'ln':un('ln',x=>x<=0?NaN:Math.log(x));break;case'log10':un('log₁₀',x=>x<=0?NaN:Math.log10(x));break;case'sin':un('sin',x=>Math.sin(ang(x)));break;case'cos':un('cos',x=>Math.cos(ang(x)));break;case'tan':un('tan',x=>Math.tan(ang(x)));break;case'sinh':un('sinh',Math.sinh);break;case'cosh':un('cosh',Math.cosh);break;case'tanh':un('tanh',Math.tanh);break;case'e':if(demoActive)return;c=fmt(Math.E);expression='e =';w=true;draw();break;case'pi':if(demoActive)return;c=fmt(Math.PI);expression='π =';w=true;draw();break;case'rand':if(demoActive)return;c=fmt(Math.random());expression='Rand =';w=true;draw();break;case'ee':if(demoActive)return;choose('*');c='10';w=false;expression=`${fmt(acc)} × 10`;draw();break;case'mc':m=0;break;case'mplus':if(!demoActive)m+=n();break;case'mminus':if(!demoActive)m-=n();break;case'mr':if(!demoActive){c=fmt(m);expression='MR =';w=true;draw()}break;case'angle':if(!demoActive){mode=mode==='Rad'?'Deg':'Rad';aBtn.textContent=mode}break;
+    case'sign':if(demoActive){comboStage=0;return}if(c!=='0'&&c!=='Error')c=c[0]==='-'?c.slice(1):'-'+c;if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw();break;
+    case'percent':un('%',x=>x/100);break;case'square':un('x²',x=>x*x);break;case'cube':un('x³',x=>x*x*x);break;case'pow':choose('^');break;case'exp':un('eˣ',Math.exp);break;case'tenpow':un('10ˣ',x=>10**x);break;case'inv':un('1/x',x=>x===0?NaN:1/x);break;case'sqrt':un('√',x=>x<0?NaN:Math.sqrt(x));break;case'cuberoot':un('∛',Math.cbrt);break;case'yroot':choose('root');break;case'ln':un('ln',x=>x<=0?NaN:Math.log(x));break;case'log10':un('log₁₀',x=>x<=0?NaN:Math.log10(x));break;case'sin':un('sin',x=>Math.sin(ang(x)));break;case'cos':un('cos',x=>Math.cos(ang(x)));break;case'tan':un('tan',x=>Math.tan(ang(x)));break;case'sinh':un('sinh',Math.sinh);break;case'cosh':un('cosh',Math.cosh);break;case'tanh':un('tanh',Math.tanh);break;case'e':if(demoActive){comboStage=0;return}c=fmt(Math.E);expression='e =';w=true;draw();break;case'pi':if(demoActive){comboStage=0;return}c=fmt(Math.PI);expression='π =';w=true;draw();break;case'rand':if(demoActive){comboStage=0;return}c=fmt(Math.random());expression='Rand =';w=true;draw();break;case'ee':if(demoActive){comboStage=0;return}choose('*');c='10';w=false;expression=`${fmt(acc)} × 10`;draw();break;case'mc':m=0;break;case'mplus':if(!demoActive)m+=n();break;case'mminus':if(!demoActive)m-=n();break;case'mr':if(!demoActive){c=fmt(m);expression='MR =';w=true;draw()}break;case'angle':if(!demoActive){mode=mode==='Rad'?'Deg':'Rad';aBtn.textContent=mode}break;
   }
 });
 document.getElementById('hist').onclick=()=>alert(h.length?h.slice(-10).reverse().join('\n'):'Még nincs előzmény.');draw();
