@@ -5,37 +5,38 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="theme-color" content="#000">
+<meta name="theme-color" content="#000000">
 <title>Számológép</title>
 <style>
-:root{--s:#1c1c1e;--n:#2c2c2e;--g:#6a6a6d;--o:#ff9f0a;--gap:10px}
+:root{--s:#1c1c1e;--n:#2c2c2e;--g:#6a6a6d;--o:#ff9f0a;--gap:8px}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 html,body{margin:0;width:100%;height:100%;background:#000;color:#fff;overflow:hidden}
 body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Arial,sans-serif}
-.app{width:min(100vw,430px);height:100dvh;margin:auto;padding:max(12px,env(safe-area-inset-top)) 15px max(12px,env(safe-area-inset-bottom));display:flex;flex-direction:column;background:#000}
-.top{height:58px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.tb{width:46px;height:46px;border-radius:50%;border:1px solid #323236;background:#171719;color:#fff;display:grid;place-items:center;font-size:24px}
-.display{height:210px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;padding:0 4px 20px;overflow:hidden}
-.expr{width:100%;min-height:30px;text-align:right;font-size:25px;font-weight:400;color:#a7a7aa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:8px}
-.screen{width:100%;text-align:right;font-size:74px;font-weight:300;line-height:1;letter-spacing:-2.8px;white-space:nowrap;overflow:hidden}
-.sci{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--gap);margin-bottom:12px}.basic{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap)}
+.app{width:min(100vw,430px);height:100dvh;margin:auto;padding:max(10px,env(safe-area-inset-top)) 15px max(10px,env(safe-area-inset-bottom));display:flex;flex-direction:column;background:#000;overflow:hidden}
+.top{height:54px;flex:0 0 54px;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.tb{width:44px;height:44px;border-radius:50%;border:1px solid #323236;background:#171719;color:#fff;display:grid;place-items:center;font-size:23px}
+.display{height:150px;flex:0 0 150px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;padding:0 4px 14px;overflow:visible}
+.expr{width:100%;min-height:28px;text-align:right;font-size:24px;font-weight:400;color:#9b9b9f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:7px}
+.screen{width:100%;min-height:66px;text-align:right;font-size:68px;font-weight:300;line-height:1;letter-spacing:-2.6px;white-space:nowrap;overflow:hidden}
+.sci{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--gap);margin-bottom:10px;flex:0 0 auto}
+.basic{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap);flex:0 0 auto}
 button{border:0;outline:0;color:#fff;font-family:inherit;display:flex;align-items:center;justify-content:center;padding:0}
-.k{height:58px;border-radius:29px;background:var(--s);font-size:19px;font-weight:500}.b{height:62px;border-radius:31px;font-size:30px}.num{background:var(--n)}.gray{background:var(--g)}.op{background:var(--o);font-size:32px}.sup{font-size:.62em;position:relative;top:-.46em;margin-left:1px}.root{font-size:25px}
-@media(max-height:850px){.display{height:170px}.k{height:54px}.b{height:58px}.screen{font-size:66px}.expr{font-size:21px}.sci,.basic{gap:8px}}
+.k{height:48px;border-radius:24px;background:var(--s);font-size:18px;font-weight:500}.b{height:52px;border-radius:26px;font-size:28px}.num{background:var(--n)}.gray{background:var(--g)}.op{background:var(--o);font-size:31px}.sup{font-size:.62em;position:relative;top:-.46em;margin-left:1px}.root{font-size:23px}
+@media(max-height:850px){.top{height:48px;flex-basis:48px}.display{height:125px;flex-basis:125px;padding-bottom:10px}.expr{font-size:21px;min-height:24px;margin-bottom:5px}.screen{font-size:60px;min-height:58px}.k{height:44px}.b{height:48px}.sci,.basic{gap:7px}}
 </style>
 </head>
 <body>
 <main class="app">
 <div class="top"><button class="tb" id="hist">↶</button><button class="tb">▦</button></div>
 <div class="display"><div class="expr" id="expr"></div><div class="screen" id="screen">0</div></div>
-<div class="sci" id="sci">
+<div class="sci">
 <button class="k" data-a="noop">(</button><button class="k" data-a="noop">)</button><button class="k" data-a="mc">mc</button><button class="k" data-a="mplus">m+</button><button class="k" data-a="mminus">m−</button><button class="k" data-a="mr">mr</button>
 <button class="k" data-a="noop">2<span class="sup">nd</span></button><button class="k" data-a="square">x<span class="sup">2</span></button><button class="k" data-a="cube">x<span class="sup">3</span></button><button class="k" data-a="pow">x<span class="sup">y</span></button><button class="k" data-a="exp">e<span class="sup">x</span></button><button class="k" data-a="tenpow">10<span class="sup">x</span></button>
 <button class="k" data-a="inv">1⁄x</button><button class="k root" data-a="sqrt">²√x</button><button class="k root" data-a="cuberoot">³√x</button><button class="k root" data-a="yroot">ʸ√x</button><button class="k" data-a="ln">ln</button><button class="k" data-a="log10">log₁₀</button>
 <button class="k" data-a="fact">x!</button><button class="k" data-a="sin">sin</button><button class="k" data-a="cos">cos</button><button class="k" data-a="tan">tan</button><button class="k" data-a="e">e</button><button class="k" data-a="ee">EE</button>
 <button class="k" data-a="rand">Rand</button><button class="k" data-a="sinh">sinh</button><button class="k" data-a="cosh">cosh</button><button class="k" data-a="tanh">tanh</button><button class="k" data-a="pi">π</button><button class="k" data-a="angle" id="angle">Rad</button>
 </div>
-<div class="basic" id="basic">
+<div class="basic">
 <button class="b gray" data-a="back">⌫</button><button class="b gray" data-a="clear">AC</button><button class="b gray" data-a="percent">%</button><button class="b op" data-a="op" data-v="/">÷</button>
 <button class="b num" data-a="digit" data-v="7">7</button><button class="b num" data-a="digit" data-v="8">8</button><button class="b num" data-a="digit" data-v="9">9</button><button class="b op" data-a="op" data-v="*">×</button>
 <button class="b num" data-a="digit" data-v="4">4</button><button class="b num" data-a="digit" data-v="5">5</button><button class="b num" data-a="digit" data-v="6">6</button><button class="b op" data-a="op" data-v="-">−</button>
@@ -44,29 +45,7 @@ button{border:0;outline:0;color:#fff;font-family:inherit;display:flex;align-item
 </div>
 </main>
 <script>
-(()=>{
-const s=document.getElementById('screen'),eLine=document.getElementById('expr'),aBtn=document.getElementById('angle');
-let c='0',acc=null,op=null,w=false,m=0,mode='Rad',h=[],expression='';
-const opSymbol=o=>o==='+'?'+':o==='-'?'−':o==='*'?'×':o==='/'?'÷':o==='^'?'^':o==='root'?'ʸ√':'';
-const n=()=>Number(c.replace(',','.'));
-const fmt=x=>!Number.isFinite(x)?'Error':(Math.abs(x)<1e-14?0:Number(x.toPrecision(12))).toString().replace('.',',');
-const draw=()=>{s.textContent=c;eLine.textContent=expression;s.style.fontSize=c.length>16?'34px':c.length>13?'42px':c.length>10?'54px':'74px'};
-const set=x=>{c=fmt(x);w=true;draw()};
-const dig=d=>{if(c==='Error'||w){c=d;w=false}else if(c==='0')c=d;else if(c.replace(/\D/g,'').length<15)c+=d;if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw()};
-const dec=()=>{if(c==='Error'||w){c='0,';w=false}else if(!c.includes(','))c+=',';if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw()};
-const calc=(x,y,o)=>o==='+'?x+y:o==='-'?x-y:o==='*'?x*y:o==='/'?(y===0?NaN:x/y):o==='^'?x**y:o==='root'?(y===0?NaN:x**(1/y)):y;
-const choose=o=>{const v=n();if(op&&!w){acc=calc(acc,v,op);c=fmt(acc)}else acc=v;op=o;w=true;expression=`${fmt(acc)} ${opSymbol(op)}`;draw()};
-const eq=()=>{if(op==null||acc==null)return;const x=acc,y=n(),r=calc(x,y,op);expression=`${fmt(x)} ${opSymbol(op)} ${fmt(y)} =`;h.push(`${expression} ${fmt(r)}`);c=fmt(r);acc=null;op=null;w=true;draw()};
-const un=(label,f)=>{const before=c;const r=f(n());expression=`${label}(${before}) =`;set(r)};
-const ang=x=>mode==='Rad'?x:x*Math.PI/180;
-const fact=x=>{if(!Number.isInteger(x)||x<0||x>170)return NaN;let r=1;for(let i=2;i<=x;i++)r*=i;return r};
-document.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const A=b.dataset.a,V=b.dataset.v;if(A==='digit')return dig(V);if(A==='dec')return dec();if(A==='op')return choose(V);if(A==='eq')return eq();switch(A){
-case'clear':c='0';acc=null;op=null;w=false;expression='';draw();break;
-case'back':c=(w||c==='Error')?'0':(c.length>1?c.slice(0,-1):'0');w=false;if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw();break;
-case'sign':if(c!=='0'&&c!=='Error')c=c[0]==='-'?c.slice(1):'-'+c;if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw();break;
-case'percent':un('%',x=>x/100);break;case'square':un('x²',x=>x*x);break;case'cube':un('x³',x=>x*x*x);break;case'pow':choose('^');break;case'exp':un('eˣ',Math.exp);break;case'tenpow':un('10ˣ',x=>10**x);break;case'inv':un('1/x',x=>x===0?NaN:1/x);break;case'sqrt':un('√',x=>x<0?NaN:Math.sqrt(x));break;case'cuberoot':un('∛',Math.cbrt);break;case'yroot':choose('root');break;case'ln':un('ln',x=>x<=0?NaN:Math.log(x));break;case'log10':un('log₁₀',x=>x<=0?NaN:Math.log10(x));break;case'fact':un('!',fact);break;case'sin':un('sin',x=>Math.sin(ang(x)));break;case'cos':un('cos',x=>Math.cos(ang(x)));break;case'tan':un('tan',x=>Math.tan(ang(x)));break;case'sinh':un('sinh',Math.sinh);break;case'cosh':un('cosh',Math.cosh);break;case'tanh':un('tanh',Math.tanh);break;case'e':c=fmt(Math.E);expression='e =';w=true;draw();break;case'pi':c=fmt(Math.PI);expression='π =';w=true;draw();break;case'rand':c=fmt(Math.random());expression='Rand =';w=true;draw();break;case'ee':choose('*');c='10';w=false;expression=`${fmt(acc)} × 10`;draw();break;case'mc':m=0;break;case'mplus':m+=n();break;case'mminus':m-=n();break;case'mr':c=fmt(m);expression='MR =';w=true;draw();break;case'angle':mode=mode==='Rad'?'Deg':'Rad';aBtn.textContent=mode;break;}});
-document.getElementById('hist').onclick=()=>alert(h.length?h.slice(-10).reverse().join('\n'):'Még nincs előzmény.');draw();
-})();
+(()=>{const s=document.getElementById('screen'),e=document.getElementById('expr'),a=document.getElementById('angle');let c='0',acc=null,op=null,w=false,m=0,mode='Rad',h=[],ex='';const sym=o=>o==='+'?'+':o==='-'?'−':o==='*'?'×':o==='/'?'÷':o==='^'?'^':o==='root'?'ʸ√':'';const n=()=>Number(c.replace(',','.'));const fmt=x=>!Number.isFinite(x)?'Error':(Math.abs(x)<1e-14?0:Number(x.toPrecision(12))).toString().replace('.',',');function draw(){s.textContent=c;e.textContent=ex;s.style.fontSize=c.length>16?'32px':c.length>13?'40px':c.length>10?'50px':'68px'}function set(x){c=fmt(x);w=true;draw()}function dig(d){if(c==='Error'||w){c=d;w=false}else if(c==='0')c=d;else if(c.replace(/\D/g,'').length<15)c+=d;if(acc!==null&&op)ex=`${fmt(acc)} ${sym(op)} ${c}`;draw()}function dec(){if(c==='Error'||w){c='0,';w=false}else if(!c.includes(','))c+=',';if(acc!==null&&op)ex=`${fmt(acc)} ${sym(op)} ${c}`;draw()}const calc=(x,y,o)=>o==='+'?x+y:o==='-'?x-y:o==='*'?x*y:o==='/'?(y===0?NaN:x/y):o==='^'?x**y:o==='root'?(y===0?NaN:x**(1/y)):y;function choose(o){const v=n();if(op&&!w){acc=calc(acc,v,op);c=fmt(acc)}else acc=v;op=o;w=true;ex=`${fmt(acc)} ${sym(op)}`;draw()}function eq(){if(op==null||acc==null)return;const x=acc,y=n(),r=calc(x,y,op);ex=`${fmt(x)} ${sym(op)} ${fmt(y)} =`;h.push(`${ex} ${fmt(r)}`);c=fmt(r);acc=null;op=null;w=true;draw()}const un=(label,f)=>{const before=c;ex=`${label}(${before}) =`;set(f(n()))};const ang=x=>mode==='Rad'?x:x*Math.PI/180;const fact=x=>{if(!Number.isInteger(x)||x<0||x>170)return NaN;let r=1;for(let i=2;i<=x;i++)r*=i;return r};document.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const A=b.dataset.a,V=b.dataset.v;if(A==='digit')return dig(V);if(A==='dec')return dec();if(A==='op')return choose(V);if(A==='eq')return eq();switch(A){case'clear':c='0';acc=null;op=null;w=false;ex='';draw();break;case'back':c=(w||c==='Error')?'0':(c.length>1?c.slice(0,-1):'0');w=false;if(acc!==null&&op)ex=`${fmt(acc)} ${sym(op)} ${c}`;draw();break;case'sign':if(c!=='0'&&c!=='Error')c=c[0]==='-'?c.slice(1):'-'+c;if(acc!==null&&op)ex=`${fmt(acc)} ${sym(op)} ${c}`;draw();break;case'percent':un('%',x=>x/100);break;case'square':un('x²',x=>x*x);break;case'cube':un('x³',x=>x*x*x);break;case'pow':choose('^');break;case'exp':un('eˣ',Math.exp);break;case'tenpow':un('10ˣ',x=>10**x);break;case'inv':un('1/x',x=>x===0?NaN:1/x);break;case'sqrt':un('√',x=>x<0?NaN:Math.sqrt(x));break;case'cuberoot':un('∛',Math.cbrt);break;case'yroot':choose('root');break;case'ln':un('ln',x=>x<=0?NaN:Math.log(x));break;case'log10':un('log₁₀',x=>x<=0?NaN:Math.log10(x));break;case'fact':un('!',fact);break;case'sin':un('sin',x=>Math.sin(ang(x)));break;case'cos':un('cos',x=>Math.cos(ang(x)));break;case'tan':un('tan',x=>Math.tan(ang(x)));break;case'sinh':un('sinh',Math.sinh);break;case'cosh':un('cosh',Math.cosh);break;case'tanh':un('tanh',Math.tanh);break;case'e':c=fmt(Math.E);ex='e =';w=true;draw();break;case'pi':c=fmt(Math.PI);ex='π =';w=true;draw();break;case'rand':c=fmt(Math.random());ex='Rand =';w=true;draw();break;case'ee':choose('*');c='10';w=false;ex=`${fmt(acc)} × 10`;draw();break;case'mc':m=0;break;case'mplus':m+=n();break;case'mminus':m-=n();break;case'mr':c=fmt(m);ex='MR =';w=true;draw();break;case'angle':mode=mode==='Rad'?'Deg':'Rad';a.textContent=mode;break;}});document.getElementById('hist').onclick=()=>alert(h.length?h.slice(-10).reverse().join('\n'):'Még nincs előzmény.');draw()})();
 </script>
 </body>
 </html>
