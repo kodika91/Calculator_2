@@ -1,0 +1,13 @@
+{
+  "name": "Számológép",
+  "short_name": "Számológép",
+  "start_url": "/Calculator_2/",
+  "scope": "/Calculator_2/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {"src":"/Calculator_2/apple-touch-icon-v6.png","sizes":"180x180","type":"image/png"},
+    {"src":"/Calculator_2/icon-512-v6.png","sizes":"512x512","type":"image/png"}
+  ]
+}
