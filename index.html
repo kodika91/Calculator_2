@@ -13,16 +13,9 @@
 html,body{margin:0;width:100%;height:100%;background:#000;color:#fff;overflow:hidden}
 body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Arial,sans-serif}
 .app{width:min(100vw,430px);height:100dvh;margin:auto;padding:max(12px,env(safe-area-inset-top)) 15px max(12px,env(safe-area-inset-bottom));display:flex;flex-direction:column;background:#000}
-.top{height:58px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.tb{width:46px;height:46px;border-radius:50%;border:1px solid #323236;background:#171719;color:#fff;display:grid;place-items:center;font-size:24px}
-.display{height:176px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;padding:0 4px 12px;overflow:hidden}
-.expr{width:100%;min-height:27px;text-align:right;font-size:23px;font-weight:400;color:#a7a7aa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px}
-.screen{width:100%;text-align:right;font-size:66px;font-weight:300;line-height:1;letter-spacing:-2.8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sci{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:10px}
-.basic{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-button{border:0;outline:0;color:#fff;font-family:inherit;display:flex;align-items:center;justify-content:center;padding:0}
-.k{height:54px;border-radius:27px;background:var(--s);font-size:18px;font-weight:500}.b{height:58px;border-radius:29px;font-size:29px}.num{background:var(--n)}.gray{background:var(--g)}.op{background:var(--o);font-size:31px}.sup{font-size:.62em;position:relative;top:-.46em;margin-left:1px}.root{font-size:24px}
-@media(max-height:850px){.display{height:154px}.k{height:50px}.b{height:54px}.screen{font-size:58px}.expr{font-size:20px}.sci,.basic{gap:7px}}
+.top{height:58px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.tb{width:46px;height:46px;border-radius:50%;border:1px solid #323236;background:#171719;color:#fff;display:grid;place-items:center;font-size:24px}
+.display{height:176px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;padding:0 4px 12px;overflow:hidden}.expr{width:100%;min-height:27px;text-align:right;font-size:21px;font-weight:400;color:#a7a7aa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px}.screen{width:100%;text-align:right;font-size:62px;font-weight:300;line-height:1.03;letter-spacing:-2.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sci{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:10px}.basic{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}button{border:0;outline:0;color:#fff;font-family:inherit;display:flex;align-items:center;justify-content:center;padding:0}.k{height:54px;border-radius:27px;background:var(--s);font-size:18px;font-weight:500}.b{height:58px;border-radius:29px;font-size:29px}.num{background:var(--n)}.gray{background:var(--g)}.op{background:var(--o);font-size:31px}.sup{font-size:.62em;position:relative;top:-.46em;margin-left:1px}.root{font-size:24px}@media(max-height:850px){.display{height:154px}.k{height:50px}.b{height:54px}.screen{font-size:56px}.expr{font-size:19px}.sci,.basic{gap:7px}}
 </style>
 </head>
 <body>
@@ -48,58 +41,50 @@ button{border:0;outline:0;color:#fff;font-family:inherit;display:flex;align-item
 (()=>{
 const s=document.getElementById('screen'),eLine=document.getElementById('expr'),aBtn=document.getElementById('angle');
 let c='0',acc=null,op=null,w=false,m=0,mode='Rad',h=[],expression='';
-let demoActive=false,demoStep=0,comboStage=0;
-const demoSteps=[
-  ['f(x) = x² + 3x − 4','f′(x) = ?'],
-  ['1. lépés','d/dx(x² + 3x − 4)'],
-  ['2. lépés','2x + 3 − 0'],
-  ['3. lépés','f′(x) = 2x + 3']
-];
+let navActive=false,branch='main',index=0,returnIndex=0;
+const lesson={
+ main:[
+  {title:'Feladat 1 · Főág · 1/7',text:'x² − 5x + 6 = 0'},
+  {title:'Feladat 1 · Főág · 2/7',text:'a = 1, b = −5, c = 6'},
+  {title:'ÚJ KÉPLET · Diszkrimináns',text:'D = b² − 4ac',jump:'disc'},
+  {title:'Feladat 1 · Főág · 4/7',text:'D = 1'},
+  {title:'ÚJ KÉPLET · Gyökképlet',text:'x₁,₂ = (−b ± √D) / 2a',jump:'roots'},
+  {title:'Feladat 1 · Főág · 6/7',text:'x₁ = 3, x₂ = 2'},
+  {title:'KÉSZ · Végeredmény',text:'x = 2 vagy x = 3'}
+ ],
+ disc:[
+  {title:'Diszkrimináns · 1/4',text:'D = b² − 4ac'},
+  {title:'Diszkrimináns · 2/4',text:'D = (−5)² − 4·1·6'},
+  {title:'Diszkrimináns · 3/4',text:'D = 25 − 24'},
+  {title:'Diszkrimináns · 4/4',text:'D = 1'}
+ ],
+ roots:[
+  {title:'Gyökképlet · 1/4',text:'x₁,₂ = (−b ± √D) / 2a'},
+  {title:'Gyökképlet · 2/4',text:'x₁,₂ = (5 ± √1) / 2'},
+  {title:'Gyökképlet · 3/4',text:'x₁ = 6/2 = 3'},
+  {title:'Gyökképlet · 4/4',text:'x₂ = 4/2 = 2'}
+ ]
+};
 const opSymbol=o=>o==='+'?'+':o==='-'?'−':o==='*'?'×':o==='/'?'÷':o==='^'?'^':o==='root'?'ʸ√':'';
 const n=()=>Number(c.replace(',','.'));
 const fmt=x=>!Number.isFinite(x)?'Error':(Math.abs(x)<1e-14?0:Number(x.toPrecision(12))).toString().replace('.',',');
-const draw=()=>{s.textContent=c;eLine.textContent=expression;s.style.fontSize=c.length>18?'31px':c.length>14?'39px':c.length>10?'51px':'66px'};
-const showDemo=()=>{const d=demoSteps[Math.min(demoStep,demoSteps.length-1)];expression=d[0];c=d[1];w=true;draw()};
-const startDemo=()=>{demoActive=true;demoStep=0;comboStage=0;showDemo()};
-const advanceDemo=()=>{if(!demoActive)return;demoStep=Math.min(demoStep+1,demoSteps.length-1);comboStage=0;showDemo()};
-const leaveDemo=()=>{demoActive=false;demoStep=0;comboStage=0;expression='';c='0';acc=null;op=null;w=false;draw()};
+const draw=()=>{s.textContent=c;eLine.textContent=expression;s.style.fontSize=c.length>18?'31px':c.length>14?'39px':c.length>10?'49px':'62px'};
+const showNav=()=>{const item=lesson[branch][index];expression=item.title;c=item.text;w=true;draw()};
+const startNav=()=>{navActive=true;branch='main';index=0;returnIndex=0;showNav()};
+const nextNav=()=>{const arr=lesson[branch];const item=arr[index];if(item.jump){returnIndex=index+1;branch=item.jump;index=0;showNav();return}if(index<arr.length-1){index++;showNav()}else if(branch!=='main'){branch='main';index=Math.min(returnIndex,lesson.main.length-1);showNav()}};
+const prevNav=()=>{if(index>0){index--;showNav()}else if(branch!=='main'){branch='main';index=Math.max(0,returnIndex-1);showNav()}};
+const detailNav=()=>{const item=lesson[branch][index];if(item.jump){returnIndex=index+1;branch=item.jump;index=0;showNav()}else{expression='RÉSZLETEZÉS';c=item.text;draw()}};
+const mainNav=()=>{branch='main';index=Math.max(0,Math.min(returnIndex,lesson.main.length-1));showNav()};
+const leaveNav=()=>{navActive=false;branch='main';index=0;returnIndex=0;c='0';expression='';acc=null;op=null;w=false;draw()};
 const set=x=>{c=fmt(x);w=true;draw()};
-const dig=d=>{
-  if(demoActive){
-    if(comboStage===2 && d==='1'){advanceDemo();return}
-    comboStage=0;
-    return;
-  }
-  if(c==='Error'||w){c=d;w=false}else if(c==='0')c=d;else if(c.replace(/\D/g,'').length<15)c+=d;
-  if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw()
-};
-const dec=()=>{if(demoActive){comboStage=0;return}if(c==='Error'||w){c='0,';w=false}else if(!c.includes(','))c+=',';if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw()};
+const dig=d=>{if(navActive){if(d==='1')nextNav();else if(d==='2')prevNav();else if(d==='3')detailNav();else if(d==='0')mainNav();return}if(c==='Error'||w){c=d;w=false}else if(c==='0')c=d;else if(c.replace(/\D/g,'').length<15)c+=d;if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw()};
+const dec=()=>{if(navActive)return;if(c==='Error'||w){c='0,';w=false}else if(!c.includes(','))c+=',';if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw()};
 const calc=(x,y,o)=>o==='+'?x+y:o==='-'?x-y:o==='*'?x*y:o==='/'?(y===0?NaN:x/y):o==='^'?x**y:o==='root'?(y===0?NaN:x**(1/y)):y;
-const choose=o=>{
-  if(demoActive){
-    if(comboStage===1 && o==='+'){comboStage=2;return}
-    comboStage=0;
-    return;
-  }
-  const v=n();if(op&&!w){acc=calc(acc,v,op);c=fmt(acc)}else acc=v;op=o;w=true;expression=`${fmt(acc)} ${opSymbol(op)}`;draw()
-};
-const eq=()=>{if(demoActive){comboStage=0;return}if(op==null||acc==null)return;const x=acc,y=n(),r=calc(x,y,op);expression=`${fmt(x)} ${opSymbol(op)} ${fmt(y)} =`;h.push(`${expression} ${fmt(r)}`);c=fmt(r);acc=null;op=null;w=true;draw()};
-const un=(label,f)=>{if(demoActive)return;const before=c;const r=f(n());expression=`${label}(${before}) =`;set(r)};
+const choose=o=>{if(navActive)return;const v=n();if(op&&!w){acc=calc(acc,v,op);c=fmt(acc)}else acc=v;op=o;w=true;expression=`${fmt(acc)} ${opSymbol(op)}`;draw()};
+const eq=()=>{if(navActive)return;if(op==null||acc==null)return;const x=acc,y=n(),r=calc(x,y,op);expression=`${fmt(x)} ${opSymbol(op)} ${fmt(y)} =`;h.push(`${expression} ${fmt(r)}`);c=fmt(r);acc=null;op=null;w=true;draw()};
+const un=(label,f)=>{if(navActive)return;const before=c,r=f(n());expression=`${label}(${before}) =`;set(r)};
 const ang=x=>mode==='Rad'?x:x*Math.PI/180;
-document.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const A=b.dataset.a,V=b.dataset.v;
-  if(A==='demo'){
-    if(!demoActive){startDemo();return}
-    comboStage=1;
-    return;
-  }
-  if(A==='digit')return dig(V);if(A==='dec')return dec();if(A==='op')return choose(V);if(A==='eq')return eq();
-  switch(A){
-    case'clear': if(demoActive){leaveDemo();return} c='0';acc=null;op=null;w=false;expression='';draw();break;
-    case'back': if(demoActive){leaveDemo();return} c=(w||c==='Error')?'0':(c.length>1?c.slice(0,-1):'0');w=false;if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw();break;
-    case'sign':if(demoActive){comboStage=0;return}if(c!=='0'&&c!=='Error')c=c[0]==='-'?c.slice(1):'-'+c;if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw();break;
-    case'percent':un('%',x=>x/100);break;case'square':un('x²',x=>x*x);break;case'cube':un('x³',x=>x*x*x);break;case'pow':choose('^');break;case'exp':un('eˣ',Math.exp);break;case'tenpow':un('10ˣ',x=>10**x);break;case'inv':un('1/x',x=>x===0?NaN:1/x);break;case'sqrt':un('√',x=>x<0?NaN:Math.sqrt(x));break;case'cuberoot':un('∛',Math.cbrt);break;case'yroot':choose('root');break;case'ln':un('ln',x=>x<=0?NaN:Math.log(x));break;case'log10':un('log₁₀',x=>x<=0?NaN:Math.log10(x));break;case'sin':un('sin',x=>Math.sin(ang(x)));break;case'cos':un('cos',x=>Math.cos(ang(x)));break;case'tan':un('tan',x=>Math.tan(ang(x)));break;case'sinh':un('sinh',Math.sinh);break;case'cosh':un('cosh',Math.cosh);break;case'tanh':un('tanh',Math.tanh);break;case'e':if(demoActive){comboStage=0;return}c=fmt(Math.E);expression='e =';w=true;draw();break;case'pi':if(demoActive){comboStage=0;return}c=fmt(Math.PI);expression='π =';w=true;draw();break;case'rand':if(demoActive){comboStage=0;return}c=fmt(Math.random());expression='Rand =';w=true;draw();break;case'ee':if(demoActive){comboStage=0;return}choose('*');c='10';w=false;expression=`${fmt(acc)} × 10`;draw();break;case'mc':m=0;break;case'mplus':if(!demoActive)m+=n();break;case'mminus':if(!demoActive)m-=n();break;case'mr':if(!demoActive){c=fmt(m);expression='MR =';w=true;draw()}break;case'angle':if(!demoActive){mode=mode==='Rad'?'Deg':'Rad';aBtn.textContent=mode}break;
-  }
-});
+document.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const A=b.dataset.a,V=b.dataset.v;if(A==='demo'){if(!navActive)startNav();return}if(A==='digit')return dig(V);if(A==='dec')return dec();if(A==='op')return choose(V);if(A==='eq')return eq();switch(A){case'clear':if(navActive){leaveNav();return}c='0';acc=null;op=null;w=false;expression='';draw();break;case'back':if(navActive){leaveNav();return}c=(w||c==='Error')?'0':(c.length>1?c.slice(0,-1):'0');w=false;if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw();break;case'sign':if(navActive)return;if(c!=='0'&&c!=='Error')c=c[0]==='-'?c.slice(1):'-'+c;if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw();break;case'percent':un('%',x=>x/100);break;case'square':un('x²',x=>x*x);break;case'cube':un('x³',x=>x*x*x);break;case'pow':choose('^');break;case'exp':un('eˣ',Math.exp);break;case'tenpow':un('10ˣ',x=>10**x);break;case'inv':un('1/x',x=>x===0?NaN:1/x);break;case'sqrt':un('√',x=>x<0?NaN:Math.sqrt(x));break;case'cuberoot':un('∛',Math.cbrt);break;case'yroot':choose('root');break;case'ln':un('ln',x=>x<=0?NaN:Math.log(x));break;case'log10':un('log₁₀',x=>x<=0?NaN:Math.log10(x));break;case'sin':un('sin',x=>Math.sin(ang(x)));break;case'cos':un('cos',x=>Math.cos(ang(x)));break;case'tan':un('tan',x=>Math.tan(ang(x)));break;case'sinh':un('sinh',Math.sinh);break;case'cosh':un('cosh',Math.cosh);break;case'tanh':un('tanh',Math.tanh);break;case'e':if(navActive)return;c=fmt(Math.E);expression='e =';w=true;draw();break;case'pi':if(navActive)return;c=fmt(Math.PI);expression='π =';w=true;draw();break;case'rand':if(navActive)return;c=fmt(Math.random());expression='Rand =';w=true;draw();break;case'ee':if(navActive)return;choose('*');c='10';w=false;expression=`${fmt(acc)} × 10`;draw();break;case'mc':m=0;break;case'mplus':if(!navActive)m+=n();break;case'mminus':if(!navActive)m-=n();break;case'mr':if(!navActive){c=fmt(m);expression='MR =';w=true;draw()}break;case'angle':if(!navActive){mode=mode==='Rad'?'Deg':'Rad';aBtn.textContent=mode}break;}});
 document.getElementById('hist').onclick=()=>alert(h.length?h.slice(-10).reverse().join('\n'):'Még nincs előzmény.');draw();
 })();
 </script>
