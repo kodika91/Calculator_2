@@ -14,7 +14,7 @@
 <title>Számológép</title>
 <style>
 :root{--s:#1c1c1e;--n:#2c2c2e;--g:#6a6a6d;--o:#ff9f0a}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 html,body{margin:0;width:100%;height:100%;background:#000;color:#fff;overflow:hidden}
 body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Arial,sans-serif}
 .app{width:min(100vw,430px);height:100dvh;margin:auto;padding:max(12px,env(safe-area-inset-top)) 15px max(12px,env(safe-area-inset-bottom));display:flex;flex-direction:column;background:#000}
@@ -25,9 +25,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text"
 .expr{width:100%;min-height:27px;text-align:right;font-size:20px;color:#a7a7aa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:6px}
 .screen{width:100%;text-align:right;font-size:62px;font-weight:300;line-height:1.03;letter-spacing:-2.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sci{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:10px}.basic{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-button{border:0;outline:0;color:#fff;font-family:inherit;display:flex;align-items:center;justify-content:center;padding:0}
+button{border:0;outline:0;color:#fff;font-family:inherit;display:flex;align-items:center;justify-content:center;padding:0;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .k{height:54px;border-radius:27px;background:var(--s);font-size:18px;font-weight:500}.b{height:58px;border-radius:29px;font-size:29px}.num{background:var(--n)}.gray{background:var(--g)}.op{background:var(--o);font-size:31px}.sup{font-size:.62em;position:relative;top:-.46em;margin-left:1px}.root{font-size:24px}
 #cameraInput{position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0}
+#demoBtn{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 @media(max-height:850px){.display{height:154px}.k{height:50px}.b{height:54px}.screen{font-size:56px}.expr{font-size:18px}.sci,.basic{gap:7px}}
 </style>
 </head>
@@ -84,8 +85,10 @@ function leaveSolve(){solve=false;task=0;step=0;transition=false;c='0';expressio
 function openCamera(){if(solve)leaveSolve();longPressed=true;cameraInput.value='';cameraInput.click()}
 function processPhoto(file){if(!file)return;solve=false;expression='FOTÓ · FELDOLGOZÁS';c='Kép beolvasása…';draw();setTimeout(()=>{tasks=JSON.parse(JSON.stringify(photoDemoTasks));photoLoaded=true;task=0;step=0;transition=false;expression=`FOTÓ KÉSZ · ${tasks.length} FELADAT`;c='x! = megnyitás';w=true;draw()},900)}
 cameraInput.addEventListener('change',()=>processPhoto(cameraInput.files&&cameraInput.files[0]));
-['pointerdown','touchstart'].forEach(ev=>demoBtn.addEventListener(ev,e=>{longPressed=false;clearTimeout(pressTimer);pressTimer=setTimeout(openCamera,700)},{passive:true}));
-['pointerup','pointercancel','touchend','touchcancel'].forEach(ev=>demoBtn.addEventListener(ev,()=>clearTimeout(pressTimer),{passive:true}));
+demoBtn.addEventListener('contextmenu',e=>e.preventDefault());
+demoBtn.addEventListener('selectstart',e=>e.preventDefault());
+demoBtn.addEventListener('pointerdown',e=>{e.preventDefault();longPressed=false;clearTimeout(pressTimer);pressTimer=setTimeout(openCamera,700)},{passive:false});
+['pointerup','pointercancel','pointerleave'].forEach(ev=>demoBtn.addEventListener(ev,e=>{e.preventDefault();clearTimeout(pressTimer)},{passive:false}));
 const set=x=>{c=fmt(x);w=true;draw()};
 const dig=d=>{if(solve){if(d==='1')nextSolve();else if(d==='2')prevSolve();else if(d==='3')detailSolve();else if(d==='0')mainSolve();return}if(c==='Error'||w){c=d;w=false}else if(c==='0')c=d;else if(c.replace(/\D/g,'').length<15)c+=d;if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw()};
 const dec=()=>{if(solve)return;if(c==='Error'||w){c='0,';w=false}else if(!c.includes(','))c+=',';draw()};
