@@ -19,7 +19,8 @@ html,body{margin:0;width:100%;height:100%;background:#000;color:#fff;overflow:hi
 body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Arial,sans-serif}
 .app{width:min(100vw,430px);height:100dvh;margin:auto;padding:max(12px,env(safe-area-inset-top)) 15px max(12px,env(safe-area-inset-bottom));display:flex;flex-direction:column;background:#000}
 .top{height:58px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.tb{width:46px;height:46px;border-radius:50%;border:1px solid #323236;background:#171719;color:#fff;display:grid;place-items:center;font-size:24px}
+.tb{width:46px;height:46px;border-radius:50%;border:1px solid #323236;background:#171719;color:#fff;display:grid;place-items:center;padding:0}
+.top-icon{width:27px;height:27px;display:block}
 .display{height:176px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;padding:0 4px 12px;overflow:hidden}
 .expr{width:100%;min-height:27px;text-align:right;font-size:20px;color:#a7a7aa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:6px}
 .screen{width:100%;text-align:right;font-size:62px;font-weight:300;line-height:1.03;letter-spacing:-2.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -31,7 +32,14 @@ button{border:0;outline:0;color:#fff;font-family:inherit;display:flex;align-item
 </head>
 <body>
 <main class="app">
-<div class="top"><button class="tb" id="hist">↶</button><button class="tb">▦</button></div>
+<div class="top">
+<button class="tb" id="hist" aria-label="Előzmények">
+<svg class="top-icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M5.8 10.4V4.9M5.8 10.4h5.5" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.2 10.1A11.2 11.2 0 1 1 5.1 20" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round"/><path d="M16 9.1v7.3l4.6 2.7" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+<button class="tb" aria-label="Számológép">
+<svg class="top-icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="7.4" y="3.6" width="17.2" height="24.8" rx="2.8" fill="none" stroke="currentColor" stroke-width="2.4"/><rect x="10.3" y="6.4" width="11.4" height="5.2" rx="1.2" fill="currentColor"/><circle cx="11.2" cy="16" r="1.65" fill="currentColor"/><circle cx="16" cy="16" r="1.65" fill="currentColor"/><circle cx="20.8" cy="16" r="1.65" fill="currentColor"/><circle cx="11.2" cy="20.5" r="1.65" fill="currentColor"/><circle cx="16" cy="20.5" r="1.65" fill="currentColor"/><circle cx="20.8" cy="20.5" r="1.65" fill="currentColor"/><circle cx="11.2" cy="25" r="1.65" fill="currentColor"/><circle cx="16" cy="25" r="1.65" fill="currentColor"/><circle cx="20.8" cy="25" r="1.65" fill="currentColor"/></svg>
+</button>
+</div>
 <div class="display"><div class="expr" id="expr"></div><div class="screen" id="screen">0</div></div>
 <div class="sci">
 <button class="k">(</button><button class="k">)</button><button class="k" data-a="mc">mc</button><button class="k" data-a="mplus">m+</button><button class="k" data-a="mminus">m−</button><button class="k" data-a="mr">mr</button>
