@@ -1,98 +1,189 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="hu">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-title" content="Számológép">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#000000">
-<link rel="apple-touch-icon" sizes="180x180" href="/Calculator_2/apple-touch-icon.png?v=10">
-<link rel="icon" type="image/png" sizes="180x180" href="/Calculator_2/apple-touch-icon.png?v=10">
-<link rel="manifest" href="/Calculator_2/manifest.webmanifest?v=10">
-<title>Számológép</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="theme-color" content="#f7d7e8" />
+<title>Momo – a te kis kalandtársad</title>
+<link rel="manifest" href="manifest.webmanifest">
 <style>
-:root{--s:#1c1c1e;--n:#2c2c2e;--g:#6a6a6d;--o:#ff9f0a}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-html,body{margin:0;width:100%;height:100%;background:#000;color:#fff;overflow:hidden}
-body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Arial,sans-serif}
-.app{width:min(100vw,430px);height:100dvh;margin:auto;padding:max(12px,env(safe-area-inset-top)) 15px max(12px,env(safe-area-inset-bottom));display:flex;flex-direction:column;background:#000}
-.top{height:58px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.tb{width:46px;height:46px;border-radius:50%;border:1px solid #323236;background:#171719;color:#fff;display:grid;place-items:center;padding:0}
-.top-icon{width:27px;height:27px;display:block}
-.display{height:176px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;padding:0 4px 12px;overflow:hidden}
-.expr{width:100%;min-height:27px;text-align:right;font-size:20px;color:#a7a7aa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:6px}
-.screen{width:100%;text-align:right;font-size:62px;font-weight:300;line-height:1.03;letter-spacing:-2.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sci{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:10px}.basic{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-button{border:0;outline:0;color:#fff;font-family:inherit;display:flex;align-items:center;justify-content:center;padding:0;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-.k{height:54px;border-radius:27px;background:var(--s);font-size:18px;font-weight:500}.b{height:58px;border-radius:29px;font-size:29px}.num{background:var(--n)}.gray{background:var(--g)}.op{background:var(--o);font-size:31px}.sup{font-size:.62em;position:relative;top:-.46em;margin-left:1px}.root{font-size:24px}
-#cameraInput{position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0}
-@media(max-height:850px){.display{height:154px}.k{height:50px}.b{height:54px}.screen{font-size:56px}.expr{font-size:18px}.sci,.basic{gap:7px}}
+:root{
+  --bg:#fff8fb;--card:#ffffffcc;--text:#433a57;--muted:#81778f;
+  --pink:#f7a6c4;--pink2:#ffd8e7;--yellow:#ffd76a;--blue:#8cc8ff;--green:#92df9a;--purple:#9b7be8;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#fff5fa,#f7fbff);color:var(--text);min-height:100vh;overflow-x:hidden}
+.app{max-width:480px;margin:0 auto;min-height:100vh;padding:env(safe-area-inset-top) 14px calc(96px + env(safe-area-inset-bottom))}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 2px 8px}
+.brand{font-size:34px;font-weight:900;letter-spacing:-1px;color:#6f56bb;text-shadow:0 2px 0 #f8bfd6}.tag{font-size:12px;color:var(--muted);margin-top:-4px}
+.money{background:white;padding:8px 12px;border-radius:18px;box-shadow:0 6px 18px #a77fa426;font-weight:800}
+.room{position:relative;background:linear-gradient(180deg,#f7e5c6 0 57%,#d4b98b 57%);border-radius:30px;min-height:480px;overflow:hidden;box-shadow:0 18px 50px #7b648238;border:1px solid #ffffffaa}
+.room:before{content:"";position:absolute;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,#fff7c4 0 55%,#b7e5ff 56% 63%,#8fc77d 64%);left:50%;top:62px;transform:translateX(-50%);box-shadow:0 0 0 10px #bf8d5e55}
+.shelf{position:absolute;right:20px;top:150px;width:85px;height:10px;background:#a26f48;border-radius:8px;box-shadow:0 60px 0 #a26f48}.plant{position:absolute;right:34px;top:104px;font-size:52px;filter:drop-shadow(0 3px 2px #0002)}
+.rug{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);width:220px;height:75px;border-radius:50%;background:#f1d9b9;box-shadow:inset 0 0 0 8px #fff6e8aa}
+.status{position:absolute;left:14px;top:14px;width:164px;background:#ffffffdd;border-radius:20px;padding:10px;backdrop-filter:blur(10px);box-shadow:0 6px 16px #0001}
+.row{display:grid;grid-template-columns:24px 1fr;gap:6px;align-items:center;margin:7px 0}.label{font-size:12px;font-weight:700}.bar{height:8px;border-radius:10px;background:#ece7f2;overflow:hidden}.fill{height:100%;border-radius:10px;transition:width .4s ease}
+.day{position:absolute;right:14px;top:14px;background:#ffffffdd;padding:8px 10px;border-radius:16px;font-weight:800;font-size:13px}
+.petWrap{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);width:250px;height:250px;display:flex;align-items:center;justify-content:center}
+.pet{font-size:146px;filter:drop-shadow(0 10px 8px #0002);user-select:none;transition:transform .2s}.pet:active{transform:scale(.95)}
+.nameBubble{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:#fff;border-radius:18px;padding:7px 14px;font-weight:800;box-shadow:0 5px 14px #0001;white-space:nowrap}
+.egg{font-size:132px;animation:bob 1.3s ease-in-out infinite;filter:drop-shadow(0 10px 8px #0002)}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+.hatchText{position:absolute;bottom:45px;background:#ffffffdd;border-radius:18px;padding:10px 14px;text-align:center;font-weight:800;box-shadow:0 6px 16px #0001}
+.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.btn{border:0;border-radius:20px;padding:13px 6px 10px;font-weight:800;color:#433a57;box-shadow:0 7px 16px #6b55771f;font-size:13px}.btn span{display:block;font-size:25px;margin-bottom:4px}.feed{background:#ffb5b0}.play{background:#ffe07e}.sleep{background:#b8a3ff}.explore{background:#9ae6a3}.btn:active{transform:translateY(1px)}
+.panel{background:#ffffffd9;border-radius:24px;padding:16px;box-shadow:0 10px 30px #76607a1c;margin:12px 0}.panel h3{margin:0 0 8px}.small{font-size:13px;color:var(--muted);line-height:1.4}.traits{display:flex;gap:7px;flex-wrap:wrap}.chip{background:#f3edf9;padding:7px 10px;border-radius:14px;font-size:12px;font-weight:700}
+.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(480px,100%);padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#ffffff00,#fff 25%)}
+.nav{display:grid;grid-template-columns:repeat(5,1fr);background:#fff;border-radius:24px;padding:9px;box-shadow:0 10px 30px #0002}.nav div{text-align:center;font-size:11px;color:#8a8393}.nav b{display:block;font-size:21px}.active{color:#7457c7!important}
+.toast{position:fixed;left:50%;top:calc(18px + env(safe-area-inset-top));transform:translate(-50%,-20px);background:#4d405f;color:white;padding:10px 14px;border-radius:18px;opacity:0;pointer-events:none;transition:.25s;z-index:50;font-size:13px}.toast.show{opacity:1;transform:translate(-50%,0)}
+.modal{position:fixed;inset:0;background:#3b31478a;display:none;align-items:flex-end;justify-content:center;z-index:40}.modal.show{display:flex}.sheet{width:min(480px,100%);background:#fff;border-radius:28px 28px 0 0;padding:18px 18px calc(24px + env(safe-area-inset-bottom));max-height:78vh;overflow:auto}.close{float:right;border:0;background:#f1edf5;border-radius:50%;width:34px;height:34px;font-size:18px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.card{background:#f8f5fb;border-radius:18px;padding:14px;text-align:center}.card .big{font-size:42px}.primary{width:100%;border:0;border-radius:18px;padding:13px;font-weight:800;background:#8a6de0;color:white;margin-top:10px}
+.hidden{display:none!important}
 </style>
 </head>
 <body>
-<input id="cameraInput" type="file" accept="image/*" capture="environment">
-<main class="app">
-<div class="top">
-<button class="tb" id="hist" aria-label="Előzmények"><svg class="top-icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M5.8 10.4V4.9M5.8 10.4h5.5" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.2 10.1A11.2 11.2 0 1 1 5.1 20" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round"/><path d="M16 9.1v7.3l4.6 2.7" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-<button class="tb" aria-label="Számológép"><svg class="top-icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="7.4" y="3.6" width="17.2" height="24.8" rx="2.8" fill="none" stroke="currentColor" stroke-width="2.4"/><rect x="10.3" y="6.4" width="11.4" height="5.2" rx="1.2" fill="currentColor"/><circle cx="11.2" cy="16" r="1.65" fill="currentColor"/><circle cx="16" cy="16" r="1.65" fill="currentColor"/><circle cx="20.8" cy="16" r="1.65" fill="currentColor"/><circle cx="11.2" cy="20.5" r="1.65" fill="currentColor"/><circle cx="16" cy="20.5" r="1.65" fill="currentColor"/><circle cx="20.8" cy="20.5" r="1.65" fill="currentColor"/><circle cx="11.2" cy="25" r="1.65" fill="currentColor"/><circle cx="16" cy="25" r="1.65" fill="currentColor"/><circle cx="20.8" cy="25" r="1.65" fill="currentColor"/></svg></button>
+<div class="toast" id="toast"></div>
+<div class="app">
+  <div class="topbar">
+    <div><div class="brand">Momo ♡</div><div class="tag">a te kis kalandtársad</div></div>
+    <div class="money">🪙 <span id="coins">120</span></div>
+  </div>
+
+  <div class="room">
+    <div class="plant">🌿</div>
+    <div class="shelf"></div>
+    <div class="rug"></div>
+    <div class="status" id="statusBox">
+      <div class="row"><div>🍎</div><div><div class="label">Éhség</div><div class="bar"><div id="hungerBar" class="fill" style="background:#f27f7f"></div></div></div></div>
+      <div class="row"><div>😊</div><div><div class="label">Boldogság</div><div class="bar"><div id="happyBar" class="fill" style="background:#f4c94d"></div></div></div></div>
+      <div class="row"><div>⚡</div><div><div class="label">Energia</div><div class="bar"><div id="energyBar" class="fill" style="background:#57aef0"></div></div></div></div>
+      <div class="row"><div>🍃</div><div><div class="label">Kíváncsiság</div><div class="bar"><div id="curiousBar" class="fill" style="background:#65c977"></div></div></div></div>
+    </div>
+    <div class="day">📅 <span id="day">1</span>. nap</div>
+
+    <div class="petWrap" id="petWrap">
+      <div class="egg" id="egg">🥚</div>
+      <div class="pet hidden" id="pet"></div>
+      <div class="nameBubble hidden" id="nameBubble"></div>
+    </div>
+    <div class="hatchText" id="hatchText">Koppints a tojásra!<br><span style="font-size:12px;font-weight:600;color:#847a8e">Egy véletlenszerű társ fog kikelni.</span></div>
+  </div>
+
+  <div class="actions">
+    <button class="btn feed" data-action="feed"><span>🥣</span>Etetés</button>
+    <button class="btn play" data-action="play"><span>🎾</span>Játék</button>
+    <button class="btn sleep" data-action="sleep"><span>🛏️</span>Alvás</button>
+    <button class="btn explore" data-action="explore"><span>🗺️</span>Felfedezés</button>
+  </div>
+
+  <div class="panel">
+    <h3 id="petTitle">A tojás még csendben vár…</h3>
+    <div class="small" id="petDesc">Keltess ki egy random lényt. A személyisége és a fejlődése az alapján alakul, hogyan gondoskodsz róla.</div>
+    <div class="traits" id="traits"></div>
+  </div>
 </div>
-<div class="display"><div class="expr" id="expr"></div><div class="screen" id="screen">0</div></div>
-<div class="sci">
-<button class="k">(</button><button class="k">)</button><button class="k" data-a="mc">mc</button><button class="k" data-a="mplus">m+</button><button class="k" data-a="mminus">m−</button><button class="k" data-a="mr">mr</button>
-<button class="k">2<span class="sup">nd</span></button><button class="k" data-a="square">x<span class="sup">2</span></button><button class="k" data-a="cube">x<span class="sup">3</span></button><button class="k" data-a="pow">x<span class="sup">y</span></button><button class="k" data-a="exp">e<span class="sup">x</span></button><button class="k" data-a="tenpow">10<span class="sup">x</span></button>
-<button class="k" data-a="inv">1⁄x</button><button class="k root" data-a="sqrt">²√x</button><button class="k root" data-a="cuberoot">³√x</button><button class="k root" data-a="yroot">ʸ√x</button><button class="k" data-a="ln">ln</button><button class="k" data-a="log10">log₁₀</button>
-<button class="k" data-a="demo" id="demoBtn">x!</button><button class="k" data-a="sin">sin</button><button class="k" data-a="cos">cos</button><button class="k" data-a="tan">tan</button><button class="k" data-a="e">e</button><button class="k" data-a="ee">EE</button>
-<button class="k" data-a="rand">Rand</button><button class="k" data-a="sinh">sinh</button><button class="k" data-a="cosh">cosh</button><button class="k" data-a="tanh">tanh</button><button class="k" data-a="pi">π</button><button class="k" data-a="angle" id="angle">Rad</button>
-</div>
-<div class="basic">
-<button class="b gray" data-a="back">⌫</button><button class="b gray" data-a="clear">AC</button><button class="b gray" data-a="percent">%</button><button class="b op" data-a="op" data-v="/">÷</button>
-<button class="b num" data-a="digit" data-v="7">7</button><button class="b num" data-a="digit" data-v="8">8</button><button class="b num" data-a="digit" data-v="9">9</button><button class="b op" data-a="op" data-v="*">×</button>
-<button class="b num" data-a="digit" data-v="4">4</button><button class="b num" data-a="digit" data-v="5">5</button><button class="b num" data-a="digit" data-v="6">6</button><button class="b op" data-a="op" data-v="-">−</button>
-<button class="b num" data-a="digit" data-v="1">1</button><button class="b num" data-a="digit" data-v="2">2</button><button class="b num" data-a="digit" data-v="3">3</button><button class="b op" data-a="op" data-v="+">+</button>
-<button class="b num" data-a="sign">±</button><button class="b num" data-a="digit" data-v="0">0</button><button class="b num" data-a="dec">,</button><button class="b op" data-a="eq">=</button>
-</div>
-</main>
+
+<div class="bottom"><div class="nav">
+  <div class="active"><b>🏠</b>Home</div><div><b>🎮</b>Játékok</div><div><b>🗺️</b>Világ</div><div><b>👥</b>Barátok</div><div><b>🛍️</b>Bolt</div>
+</div></div>
+
+<div class="modal" id="modal"><div class="sheet"><button class="close" id="closeModal">×</button><h2 id="modalTitle"></h2><div id="modalBody"></div></div></div>
+
 <script>
-(()=>{
-const s=document.getElementById('screen'),eLine=document.getElementById('expr'),aBtn=document.getElementById('angle'),cameraInput=document.getElementById('cameraInput');
-let c='0',acc=null,op=null,w=false,m=0,mode='Rad',history=[],expression='';
-let solve=false,task=0,step=0,transition=false,photoLoaded=false;
-let tasks=[];
-const demoTasks=[
-{name:'Feladat 1',problem:'2x + 7 = 19',steps:[['Főág · 1/3','2x = 19 − 7'],['Főág · 2/3','2x = 12'],['KÉSZ · Végeredmény','x = 6']]},
-{name:'Feladat 2',problem:'x² − 7x + 10 = 0',steps:[['Főág · 1/6','a = 1, b = −7, c = 10'],['ÚJ KÉPLET · Diszkrimináns','D = b² − 4ac'],['Levezetés · 3/6','D = 49 − 40 = 9'],['ÚJ KÉPLET · Gyökképlet','x₁,₂ = (−b ± √D) / 2a'],['Levezetés · 5/6','x₁,₂ = (7 ± 3) / 2'],['KÉSZ · Végeredmény','x = 2 vagy x = 5']]},
-{name:'Feladat 3',problem:'f(x) = 3x² − 4x + 1',steps:[['Főág · 1/4','f′(x) = ?'],['ÚJ KÉPLET · Deriválás','d/dx(xⁿ) = n·xⁿ⁻¹'],['Levezetés · 3/4','6x − 4 + 0'],['KÉSZ · Végeredmény','f′(x) = 6x − 4']]}
+const creatures = [
+  {name:'Momo', emoji:'🐶', type:'Erdőjáró', traits:['kíváncsi','kedves'], desc:'Imád új helyeket felfedezni, és minden apróságra rácsodálkozik.'},
+  {name:'Lumi', emoji:'🐱', type:'Csillagcica', traits:['nyugodt','bújós'], desc:'Csendes, figyelmes kis társ, aki a békés pillanatokat szereti.'},
+  {name:'Piko', emoji:'🦊', type:'Rókakölyök', traits:['játékos','ravasz'], desc:'Mindig kitalál valami új játékot, és nehéz unatkozni mellette.'},
+  {name:'Nubi', emoji:'🐼', type:'Bambuszlakó', traits:['álmos','barátságos'], desc:'Lassabb tempóban él, de nagyon ragaszkodó és békés.'},
+  {name:'Zizi', emoji:'🐰', type:'Mezei ugró', traits:['vidám','energikus'], desc:'Tele van energiával, gyorsan tanul és imád mozogni.'},
+  {name:'Kumo', emoji:'🐲', type:'Mini sárkány', traits:['bátor','kíváncsi'], desc:'Kicsi, de vakmerő. Szeret kihívásokat teljesíteni.'}
 ];
-const q=new URLSearchParams(location.search);if(q.get('api')){localStorage.setItem('calculator_ai_endpoint',q.get('api'));history.replaceState(null,'',location.pathname)}
-const endpoint=()=>localStorage.getItem('calculator_ai_endpoint')||'';
-const opSymbol=o=>o==='+'?'+':o==='-'?'−':o==='*'?'×':o==='/'?'÷':o==='^'?'^':o==='root'?'ʸ√':'';
-const n=()=>Number(c.replace(',','.'));
-const fmt=x=>!Number.isFinite(x)?'Error':(Math.abs(x)<1e-14?0:Number(x.toPrecision(12))).toString().replace('.',',');
-const draw=()=>{s.textContent=c;eLine.textContent=expression;s.style.fontSize=c.length>22?'27px':c.length>17?'33px':c.length>12?'43px':'62px'};
-function showTaskIntro(){transition=false;expression=`${tasks[task].name}/${tasks.length} · FELADAT`;c=tasks[task].problem;w=true;draw()}
-function showStep(){const t=tasks[task],st=t.steps[step];expression=`${t.name}/${tasks.length} · ${st[0]}`;c=st[1];w=true;draw()}
-function startSolve(){if(!tasks.length)return;solve=true;task=0;step=-1;showTaskIntro()}
-function nextSolve(){if(transition){task++;step=-1;showTaskIntro();return}const t=tasks[task];if(step<t.steps.length-1){step++;showStep();return}if(task<tasks.length-1){transition=true;expression=`KÖVETKEZŐ FELADAT · ${task+2}/${tasks.length}`;c=tasks[task+1].problem;draw();return}expression=`MINDEN FELADAT KÉSZ · ${tasks.length}/${tasks.length}`;c=t.steps[t.steps.length-1][1];draw()}
-function prevSolve(){if(transition){transition=false;showStep();return}if(step>0){step--;showStep();return}if(step===0){step=-1;showTaskIntro();return}if(task>0){task--;step=tasks[task].steps.length-1;showStep()}}
-function detailSolve(){if(step<0){expression=`${tasks[task].name}/${tasks.length} · RÉSZLETEZÉS`;c=tasks[task].problem;draw();return}const st=tasks[task].steps[step];expression=`${tasks[task].name}/${tasks.length} · RÉSZLETEZÉS`;c=st[1];draw()}
-function mainSolve(){step=-1;transition=false;showTaskIntro()}
-function leaveSolve(){solve=false;task=0;step=0;transition=false;c='0';expression='';acc=null;op=null;w=false;draw()}
-function toDataURL(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file)})}
-async function processPhoto(file){if(!file)return;solve=false;photoLoaded=false;expression='FOTÓ · FELDOLGOZÁS';c='Kép beolvasása…';draw();try{const url=endpoint();if(!url){tasks=JSON.parse(JSON.stringify(demoTasks));photoLoaded=true;expression=`DEMO · ${tasks.length} FELADAT`;c='x! = megnyitás';w=true;draw();return}const image=await toDataURL(file);const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image})});const data=await r.json();if(!r.ok)throw new Error(data?.error||'AI feldolgozási hiba');if(!Array.isArray(data.tasks)||!data.tasks.length)throw new Error('Nem találtam feladatot');tasks=data.tasks;photoLoaded=true;task=0;step=0;transition=false;expression=`FOTÓ KÉSZ · ${tasks.length} FELADAT`;c='x! = megnyitás';w=true;draw()}catch(err){expression='FOTÓ · HIBA';c=String(err.message||err).slice(0,32);w=true;draw()}}
-cameraInput.addEventListener('change',()=>processPhoto(cameraInput.files&&cameraInput.files[0]));
-const set=x=>{c=fmt(x);w=true;draw()};
-const dig=d=>{if(solve){if(d==='1')nextSolve();else if(d==='2')prevSolve();else if(d==='3')detailSolve();else if(d==='0')mainSolve();return}if(c==='Error'||w){c=d;w=false}else if(c==='0')c=d;else if(c.replace(/\D/g,'').length<15)c+=d;if(acc!==null&&op)expression=`${fmt(acc)} ${opSymbol(op)} ${c}`;draw()};
-const dec=()=>{if(solve)return;if(c==='Error'||w){c='0,';w=false}else if(!c.includes(','))c+=',';draw()};
-const calc=(x,y,o)=>o==='+'?x+y:o==='-'?x-y:o==='*'?x*y:o==='/'?(y===0?NaN:x/y):o==='^'?x**y:o==='root'?(y===0?NaN:x**(1/y)):y;
-const choose=o=>{if(solve)return;const v=n();if(op&&!w){acc=calc(acc,v,op);c=fmt(acc)}else acc=v;op=o;w=true;expression=`${fmt(acc)} ${opSymbol(op)}`;draw()};
-const eq=()=>{if(solve||op==null||acc==null)return;const x=acc,y=n(),r=calc(x,y,op);expression=`${fmt(x)} ${opSymbol(op)} ${fmt(y)} =`;history.push(`${expression} ${fmt(r)}`);c=fmt(r);acc=null;op=null;w=true;draw()};
-const un=(label,f)=>{if(solve)return;const before=c,r=f(n());expression=`${label}(${before}) =`;set(r)};
-const ang=x=>mode==='Rad'?x:x*Math.PI/180;
-document.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const A=b.dataset.a,V=b.dataset.v;if(A==='demo'){if(photoLoaded){startSolve();return}cameraInput.value='';cameraInput.click();return}if(A==='digit')return dig(V);if(A==='dec')return dec();if(A==='op')return choose(V);if(A==='eq')return eq();switch(A){case'clear':if(solve)return leaveSolve();c='0';acc=null;op=null;w=false;expression='';draw();break;case'back':if(solve)return leaveSolve();c=(w||c==='Error')?'0':(c.length>1?c.slice(0,-1):'0');w=false;draw();break;case'sign':if(!solve&&c!=='0'&&c!=='Error'){c=c[0]==='-'?c.slice(1):'-'+c;draw()}break;case'percent':un('%',x=>x/100);break;case'square':un('x²',x=>x*x);break;case'cube':un('x³',x=>x*x*x);break;case'pow':choose('^');break;case'exp':un('eˣ',Math.exp);break;case'tenpow':un('10ˣ',x=>10**x);break;case'inv':un('1/x',x=>x===0?NaN:1/x);break;case'sqrt':un('√',x=>x<0?NaN:Math.sqrt(x));break;case'cuberoot':un('∛',Math.cbrt);break;case'yroot':choose('root');break;case'ln':un('ln',x=>x<=0?NaN:Math.log(x));break;case'log10':un('log₁₀',x=>x<=0?NaN:Math.log10(x));break;case'sin':un('sin',x=>Math.sin(ang(x)));break;case'cos':un('cos',x=>Math.cos(ang(x)));break;case'tan':un('tan',x=>Math.tan(ang(x)));break;case'sinh':un('sinh',Math.sinh);break;case'cosh':un('cosh',Math.cosh);break;case'tanh':un('tanh',Math.tanh);break;case'e':if(!solve){c=fmt(Math.E);expression='e =';w=true;draw()}break;case'pi':if(!solve){c=fmt(Math.PI);expression='π =';w=true;draw()}break;case'rand':if(!solve){c=fmt(Math.random());expression='Rand =';w=true;draw()}break;case'ee':if(!solve){choose('*');c='10';w=false;draw()}break;case'mc':m=0;break;case'mplus':if(!solve)m+=n();break;case'mminus':if(!solve)m-=n();break;case'mr':if(!solve){c=fmt(m);w=true;draw()}break;case'angle':if(!solve){mode=mode==='Rad'?'Deg':'Rad';aBtn.textContent=mode}break;}});
-document.getElementById('hist').onclick=()=>alert(history.length?history.slice(-10).reverse().join('\n'):'Még nincs előzmény.');draw();
-})();
+
+const defaults = {hatched:false, creature:null, stats:{hunger:72,happy:62,energy:78,curious:48},coins:120,day:1,lastSeen:Date.now(),xp:0};
+const coinsEl=document.getElementById('coins');
+const dayEl=document.getElementById('day');
+const hungerBarEl=document.getElementById('hungerBar');
+const happyBarEl=document.getElementById('happyBar');
+const energyBarEl=document.getElementById('energyBar');
+const curiousBarEl=document.getElementById('curiousBar');
+const eggEl=document.getElementById('egg');
+const petEl=document.getElementById('pet');
+const nameBubbleEl=document.getElementById('nameBubble');
+const hatchTextEl=document.getElementById('hatchText');
+const petTitleEl=document.getElementById('petTitle');
+const petDescEl=document.getElementById('petDesc');
+const traitsEl=document.getElementById('traits');
+const modalEl=document.getElementById('modal');
+const modalTitleEl=document.getElementById('modalTitle');
+const modalBodyEl=document.getElementById('modalBody');
+let state = load();
+
+function load(){
+  try{const s=JSON.parse(localStorage.getItem('momoSave'));return s?{...defaults,...s,stats:{...defaults.stats,...s.stats}}:structuredClone(defaults)}catch(e){return structuredClone(defaults)}
+}
+function save(){state.lastSeen=Date.now();localStorage.setItem('momoSave',JSON.stringify(state))}
+function clamp(v){return Math.max(0,Math.min(100,v))}
+function decay(){
+  const now=Date.now(); const hours=Math.min(24,(now-(state.lastSeen||now))/3600000);
+  if(state.hatched && hours>0.05){
+    state.stats.hunger=clamp(state.stats.hunger-hours*2.0);
+    state.stats.happy=clamp(state.stats.happy-hours*0.8);
+    state.stats.energy=clamp(state.stats.energy-hours*1.1);
+    state.stats.curious=clamp(state.stats.curious-hours*0.4);
+  }
+}
+decay();
+
+function render(){
+  coinsEl.textContent=Math.floor(state.coins); dayEl.textContent=state.day;
+  hungerBarEl.style.width=state.stats.hunger+'%'; happyBarEl.style.width=state.stats.happy+'%'; energyBarEl.style.width=state.stats.energy+'%'; curiousBarEl.style.width=state.stats.curious+'%';
+  if(state.hatched && state.creature){
+    eggEl.classList.add('hidden'); petEl.classList.remove('hidden'); nameBubbleEl.classList.remove('hidden'); hatchTextEl.classList.add('hidden');
+    petEl.textContent=state.creature.emoji; nameBubbleEl.textContent=state.creature.name+' ♡';
+    petTitleEl.textContent=state.creature.name+' – '+state.creature.type; petDescEl.textContent=state.creature.desc;
+    traitsEl.innerHTML=state.creature.traits.map(t=>`<div class="chip">${t}</div>`).join('')+`<div class="chip">XP ${state.xp}</div>`;
+  } else {
+    eggEl.classList.remove('hidden'); petEl.classList.add('hidden'); nameBubbleEl.classList.add('hidden'); hatchTextEl.classList.remove('hidden');
+  }
+  save();
+}
+function toast(msg){toastEl=document.getElementById('toast');toastEl.textContent=msg;toastEl.classList.add('show');setTimeout(()=>toastEl.classList.remove('show'),1700)}
+function hatch(){
+  if(state.hatched)return;
+  eggEl.style.animation='none';
+  let n=0; const seq=['🥚','✨','🥚','💫','🥚','🌟'];
+  const t=setInterval(()=>{eggEl.textContent=seq[n++%seq.length]; if(n>8){clearInterval(t); state.creature=creatures[Math.floor(Math.random()*creatures.length)];state.hatched=true;state.stats={hunger:80,happy:82,energy:88,curious:60};state.xp=0;save();render();toast('Kikelt '+state.creature.name+'! ♡');}},170);
+}
+eggEl.addEventListener('click',hatch);hatchTextEl.addEventListener('click',hatch);
+
+function requirePet(){if(!state.hatched){toast('Előbb keltesd ki a tojást!');return false}return true}
+function action(kind){if(!requirePet())return;
+  const c=state.creature.name;
+  if(kind==='feed'){
+    openModal('Etetés',`<div class="grid"><div class="card"><div class="big">🍎</div>Alma<br><small>+18 éhség</small></div><div class="card"><div class="big">🥕</div>Répa<br><small>+14 éhség</small></div></div><button class="primary" onclick="applyFeed()">Adj enni ${c}-nak</button>`);
+  }
+  if(kind==='play'){
+    openModal('Játék',`<div class="card"><div class="big">🎾</div><b>Labdázás</b><p class="small">Rövid játék: nő a boldogság és az XP, de egy kis energiába kerül.</p></div><button class="primary" onclick="applyPlay()">Játsszunk!</button>`);
+  }
+  if(kind==='sleep'){
+    state.stats.energy=clamp(state.stats.energy+28);state.stats.hunger=clamp(state.stats.hunger-5);state.xp+=1;save();render();toast(c+' kipihente magát 😴');
+  }
+  if(kind==='explore'){
+    const finds=['egy csillogó kavicsot ✨','egy apró virágot 🌼','egy különös tollat 🪶','egy arany levelet 🍂','egy barátságos pillangót 🦋'];
+    const found=finds[Math.floor(Math.random()*finds.length)];state.stats.curious=clamp(state.stats.curious+16);state.stats.energy=clamp(state.stats.energy-10);state.stats.happy=clamp(state.stats.happy+8);state.coins+=Math.floor(3+Math.random()*8);state.xp+=4;save();render();openModal('Felfedezés',`<div class="card"><div class="big">🌳</div><p>${c} talált <b>${found}</b>.</p><p class="small">Kíváncsiság +16 · Boldogság +8 · XP +4</p></div>`);
+  }
+}
+document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',()=>action(b.dataset.action)));
+
+function openModal(title,body){modalTitleEl.textContent=title;modalBodyEl.innerHTML=body;modalEl.classList.add('show')}
+function closeModal(){modalEl.classList.remove('show')}
+closeModalBtn=document.getElementById('closeModal');closeModalBtn.addEventListener('click',closeModal);modalEl.addEventListener('click',e=>{if(e.target===modalEl)closeModal()});
+window.applyFeed=()=>{state.stats.hunger=clamp(state.stats.hunger+18);state.stats.happy=clamp(state.stats.happy+3);state.xp+=1;save();render();closeModal();toast('Finom volt! 😋')};
+window.applyPlay=()=>{state.stats.happy=clamp(state.stats.happy+20);state.stats.energy=clamp(state.stats.energy-8);state.stats.curious=clamp(state.stats.curious+4);state.xp+=3;save();render();closeModal();toast('Nagyon élvezte a játékot! 🎾')};
+
+setInterval(()=>{if(state.hatched){state.stats.hunger=clamp(state.stats.hunger-0.12);state.stats.energy=clamp(state.stats.energy-0.06);render()}},60000);
+render();
 </script>
 </body>
 </html>
