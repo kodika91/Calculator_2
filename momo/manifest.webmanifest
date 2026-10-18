@@ -1,0 +1,9 @@
+{
+  "name": "Momo – a te kis kalandtársad",
+  "short_name": "Momo",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fff8fb",
+  "theme_color": "#f7d7e8",
+  "lang": "hu"
+}
