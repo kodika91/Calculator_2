@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="theme-color" content="#f7d7e8" />
+<title>Momo – a te kis kalandtársad</title>
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{
+  --bg:#fff8fb;--card:#ffffffcc;--text:#433a57;--muted:#81778f;
+  --pink:#f7a6c4;--pink2:#ffd8e7;--yellow:#ffd76a;--blue:#8cc8ff;--green:#92df9a;--purple:#9b7be8;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#fff5fa,#f7fbff);color:var(--text);min-height:100vh;overflow-x:hidden}
+.app{max-width:480px;margin:0 auto;min-height:100vh;padding:env(safe-area-inset-top) 14px calc(96px + env(safe-area-inset-bottom))}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 2px 8px}
+.brand{font-size:34px;font-weight:900;letter-spacing:-1px;color:#6f56bb;text-shadow:0 2px 0 #f8bfd6}.tag{font-size:12px;color:var(--muted);margin-top:-4px}
+.money{background:white;padding:8px 12px;border-radius:18px;box-shadow:0 6px 18px #a77fa426;font-weight:800}
+.room{position:relative;background:linear-gradient(180deg,#f7e5c6 0 57%,#d4b98b 57%);border-radius:30px;min-height:480px;overflow:hidden;box-shadow:0 18px 50px #7b648238;border:1px solid #ffffffaa}
+.room:before{content:"";position:absolute;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,#fff7c4 0 55%,#b7e5ff 56% 63%,#8fc77d 64%);left:50%;top:62px;transform:translateX(-50%);box-shadow:0 0 0 10px #bf8d5e55}
+.shelf{position:absolute;right:20px;top:150px;width:85px;height:10px;background:#a26f48;border-radius:8px;box-shadow:0 60px 0 #a26f48}.plant{position:absolute;right:34px;top:104px;font-size:52px;filter:drop-shadow(0 3px 2px #0002)}
+.rug{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);width:220px;height:75px;border-radius:50%;background:#f1d9b9;box-shadow:inset 0 0 0 8px #fff6e8aa}
+.status{position:absolute;left:14px;top:14px;width:164px;background:#ffffffdd;border-radius:20px;padding:10px;backdrop-filter:blur(10px);box-shadow:0 6px 16px #0001}
+.row{display:grid;grid-template-columns:24px 1fr;gap:6px;align-items:center;margin:7px 0}.label{font-size:12px;font-weight:700}.bar{height:8px;border-radius:10px;background:#ece7f2;overflow:hidden}.fill{height:100%;border-radius:10px;transition:width .4s ease}
+.day{position:absolute;right:14px;top:14px;background:#ffffffdd;padding:8px 10px;border-radius:16px;font-weight:800;font-size:13px}
+.petWrap{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);width:250px;height:250px;display:flex;align-items:center;justify-content:center}
+.pet{font-size:146px;filter:drop-shadow(0 10px 8px #0002);user-select:none;transition:transform .2s}.pet:active{transform:scale(.95)}
+.nameBubble{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:#fff;border-radius:18px;padding:7px 14px;font-weight:800;box-shadow:0 5px 14px #0001;white-space:nowrap}
+.egg{font-size:132px;animation:bob 1.3s ease-in-out infinite;filter:drop-shadow(0 10px 8px #0002)}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+.hatchText{position:absolute;bottom:45px;background:#ffffffdd;border-radius:18px;padding:10px 14px;text-align:center;font-weight:800;box-shadow:0 6px 16px #0001}
+.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.btn{border:0;border-radius:20px;padding:13px 6px 10px;font-weight:800;color:#433a57;box-shadow:0 7px 16px #6b55771f;font-size:13px}.btn span{display:block;font-size:25px;margin-bottom:4px}.feed{background:#ffb5b0}.play{background:#ffe07e}.sleep{background:#b8a3ff}.explore{background:#9ae6a3}.btn:active{transform:translateY(1px)}
+.panel{background:#ffffffd9;border-radius:24px;padding:16px;box-shadow:0 10px 30px #76607a1c;margin:12px 0}.panel h3{margin:0 0 8px}.small{font-size:13px;color:var(--muted);line-height:1.4}.traits{display:flex;gap:7px;flex-wrap:wrap}.chip{background:#f3edf9;padding:7px 10px;border-radius:14px;font-size:12px;font-weight:700}
+.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(480px,100%);padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#ffffff00,#fff 25%)}
+.nav{display:grid;grid-template-columns:repeat(5,1fr);background:#fff;border-radius:24px;padding:9px;box-shadow:0 10px 30px #0002}.nav div{text-align:center;font-size:11px;color:#8a8393}.nav b{display:block;font-size:21px}.active{color:#7457c7!important}
+.toast{position:fixed;left:50%;top:calc(18px + env(safe-area-inset-top));transform:translate(-50%,-20px);background:#4d405f;color:white;padding:10px 14px;border-radius:18px;opacity:0;pointer-events:none;transition:.25s;z-index:50;font-size:13px}.toast.show{opacity:1;transform:translate(-50%,0)}
+.modal{position:fixed;inset:0;background:#3b31478a;display:none;align-items:flex-end;justify-content:center;z-index:40}.modal.show{display:flex}.sheet{width:min(480px,100%);background:#fff;border-radius:28px 28px 0 0;padding:18px 18px calc(24px + env(safe-area-inset-bottom));max-height:78vh;overflow:auto}.close{float:right;border:0;background:#f1edf5;border-radius:50%;width:34px;height:34px;font-size:18px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.card{background:#f8f5fb;border-radius:18px;padding:14px;text-align:center}.card .big{font-size:42px}.primary{width:100%;border:0;border-radius:18px;padding:13px;font-weight:800;background:#8a6de0;color:white;margin-top:10px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<div class="app">
+  <div class="topbar">
+    <div><div class="brand">Momo ♡</div><div class="tag">a te kis kalandtársad</div></div>
+    <div class="money">🪙 <span id="coins">120</span></div>
+  </div>
+
+  <div class="room">
+    <div class="plant">🌿</div>
+    <div class="shelf"></div>
+    <div class="rug"></div>
+    <div class="status" id="statusBox">
+      <div class="row"><div>🍎</div><div><div class="label">Éhség</div><div class="bar"><div id="hungerBar" class="fill" style="background:#f27f7f"></div></div></div></div>
+      <div class="row"><div>😊</div><div><div class="label">Boldogság</div><div class="bar"><div id="happyBar" class="fill" style="background:#f4c94d"></div></div></div></div>
+      <div class="row"><div>⚡</div><div><div class="label">Energia</div><div class="bar"><div id="energyBar" class="fill" style="background:#57aef0"></div></div></div></div>
+      <div class="row"><div>🍃</div><div><div class="label">Kíváncsiság</div><div class="bar"><div id="curiousBar" class="fill" style="background:#65c977"></div></div></div></div>
+    </div>
+    <div class="day">📅 <span id="day">1</span>. nap</div>
+
+    <div class="petWrap" id="petWrap">
+      <div class="egg" id="egg">🥚</div>
+      <div class="pet hidden" id="pet"></div>
+      <div class="nameBubble hidden" id="nameBubble"></div>
+    </div>
+    <div class="hatchText" id="hatchText">Koppints a tojásra!<br><span style="font-size:12px;font-weight:600;color:#847a8e">Egy véletlenszerű társ fog kikelni.</span></div>
+  </div>
+
+  <div class="actions">
+    <button class="btn feed" data-action="feed"><span>🥣</span>Etetés</button>
+    <button class="btn play" data-action="play"><span>🎾</span>Játék</button>
+    <button class="btn sleep" data-action="sleep"><span>🛏️</span>Alvás</button>
+    <button class="btn explore" data-action="explore"><span>🗺️</span>Felfedezés</button>
+  </div>
+
+  <div class="panel">
+    <h3 id="petTitle">A tojás még csendben vár…</h3>
+    <div class="small" id="petDesc">Keltess ki egy random lényt. A személyisége és a fejlődése az alapján alakul, hogyan gondoskodsz róla.</div>
+    <div class="traits" id="traits"></div>
+  </div>
+</div>
+
+<div class="bottom"><div class="nav">
+  <div class="active"><b>🏠</b>Home</div><div><b>🎮</b>Játékok</div><div><b>🗺️</b>Világ</div><div><b>👥</b>Barátok</div><div><b>🛍️</b>Bolt</div>
+</div></div>
+
+<div class="modal" id="modal"><div class="sheet"><button class="close" id="closeModal">×</button><h2 id="modalTitle"></h2><div id="modalBody"></div></div></div>
+
+<script>
+const creatures = [
+  {name:'Momo', emoji:'🐶', type:'Erdőjáró', traits:['kíváncsi','kedves'], desc:'Imád új helyeket felfedezni, és minden apróságra rácsodálkozik.'},
+  {name:'Lumi', emoji:'🐱', type:'Csillagcica', traits:['nyugodt','bújós'], desc:'Csendes, figyelmes kis társ, aki a békés pillanatokat szereti.'},
+  {name:'Piko', emoji:'🦊', type:'Rókakölyök', traits:['játékos','ravasz'], desc:'Mindig kitalál valami új játékot, és nehéz unatkozni mellette.'},
+  {name:'Nubi', emoji:'🐼', type:'Bambuszlakó', traits:['álmos','barátságos'], desc:'Lassabb tempóban él, de nagyon ragaszkodó és békés.'},
+  {name:'Zizi', emoji:'🐰', type:'Mezei ugró', traits:['vidám','energikus'], desc:'Tele van energiával, gyorsan tanul és imád mozogni.'},
+  {name:'Kumo', emoji:'🐲', type:'Mini sárkány', traits:['bátor','kíváncsi'], desc:'Kicsi, de vakmerő. Szeret kihívásokat teljesíteni.'}
+];
+
+const defaults = {hatched:false, creature:null, stats:{hunger:72,happy:62,energy:78,curious:48},coins:120,day:1,lastSeen:Date.now(),xp:0};
+const coinsEl=document.getElementById('coins');
+const dayEl=document.getElementById('day');
+const hungerBarEl=document.getElementById('hungerBar');
+const happyBarEl=document.getElementById('happyBar');
+const energyBarEl=document.getElementById('energyBar');
+const curiousBarEl=document.getElementById('curiousBar');
+const eggEl=document.getElementById('egg');
+const petEl=document.getElementById('pet');
+const nameBubbleEl=document.getElementById('nameBubble');
+const hatchTextEl=document.getElementById('hatchText');
+const petTitleEl=document.getElementById('petTitle');
+const petDescEl=document.getElementById('petDesc');
+const traitsEl=document.getElementById('traits');
+const modalEl=document.getElementById('modal');
+const modalTitleEl=document.getElementById('modalTitle');
+const modalBodyEl=document.getElementById('modalBody');
+let state = load();
+
+function load(){
+  try{const s=JSON.parse(localStorage.getItem('momoSave'));return s?{...defaults,...s,stats:{...defaults.stats,...s.stats}}:structuredClone(defaults)}catch(e){return structuredClone(defaults)}
+}
+function save(){state.lastSeen=Date.now();localStorage.setItem('momoSave',JSON.stringify(state))}
+function clamp(v){return Math.max(0,Math.min(100,v))}
+function decay(){
+  const now=Date.now(); const hours=Math.min(24,(now-(state.lastSeen||now))/3600000);
+  if(state.hatched && hours>0.05){
+    state.stats.hunger=clamp(state.stats.hunger-hours*2.0);
+    state.stats.happy=clamp(state.stats.happy-hours*0.8);
+    state.stats.energy=clamp(state.stats.energy-hours*1.1);
+    state.stats.curious=clamp(state.stats.curious-hours*0.4);
+  }
+}
+decay();
+
+function render(){
+  coinsEl.textContent=Math.floor(state.coins); dayEl.textContent=state.day;
+  hungerBarEl.style.width=state.stats.hunger+'%'; happyBarEl.style.width=state.stats.happy+'%'; energyBarEl.style.width=state.stats.energy+'%'; curiousBarEl.style.width=state.stats.curious+'%';
+  if(state.hatched && state.creature){
+    eggEl.classList.add('hidden'); petEl.classList.remove('hidden'); nameBubbleEl.classList.remove('hidden'); hatchTextEl.classList.add('hidden');
+    petEl.textContent=state.creature.emoji; nameBubbleEl.textContent=state.creature.name+' ♡';
+    petTitleEl.textContent=state.creature.name+' – '+state.creature.type; petDescEl.textContent=state.creature.desc;
+    traitsEl.innerHTML=state.creature.traits.map(t=>`<div class="chip">${t}</div>`).join('')+`<div class="chip">XP ${state.xp}</div>`;
+  } else {
+    eggEl.classList.remove('hidden'); petEl.classList.add('hidden'); nameBubbleEl.classList.add('hidden'); hatchTextEl.classList.remove('hidden');
+  }
+  save();
+}
+function toast(msg){toastEl=document.getElementById('toast');toastEl.textContent=msg;toastEl.classList.add('show');setTimeout(()=>toastEl.classList.remove('show'),1700)}
+function hatch(){
+  if(state.hatched)return;
+  eggEl.style.animation='none';
+  let n=0; const seq=['🥚','✨','🥚','💫','🥚','🌟'];
+  const t=setInterval(()=>{eggEl.textContent=seq[n++%seq.length]; if(n>8){clearInterval(t); state.creature=creatures[Math.floor(Math.random()*creatures.length)];state.hatched=true;state.stats={hunger:80,happy:82,energy:88,curious:60};state.xp=0;save();render();toast('Kikelt '+state.creature.name+'! ♡');}},170);
+}
+eggEl.addEventListener('click',hatch);hatchTextEl.addEventListener('click',hatch);
+
+function requirePet(){if(!state.hatched){toast('Előbb keltesd ki a tojást!');return false}return true}
+function action(kind){if(!requirePet())return;
+  const c=state.creature.name;
+  if(kind==='feed'){
+    openModal('Etetés',`<div class="grid"><div class="card"><div class="big">🍎</div>Alma<br><small>+18 éhség</small></div><div class="card"><div class="big">🥕</div>Répa<br><small>+14 éhség</small></div></div><button class="primary" onclick="applyFeed()">Adj enni ${c}-nak</button>`);
+  }
+  if(kind==='play'){
+    openModal('Játék',`<div class="card"><div class="big">🎾</div><b>Labdázás</b><p class="small">Rövid játék: nő a boldogság és az XP, de egy kis energiába kerül.</p></div><button class="primary" onclick="applyPlay()">Játsszunk!</button>`);
+  }
+  if(kind==='sleep'){
+    state.stats.energy=clamp(state.stats.energy+28);state.stats.hunger=clamp(state.stats.hunger-5);state.xp+=1;save();render();toast(c+' kipihente magát 😴');
+  }
+  if(kind==='explore'){
+    const finds=['egy csillogó kavicsot ✨','egy apró virágot 🌼','egy különös tollat 🪶','egy arany levelet 🍂','egy barátságos pillangót 🦋'];
+    const found=finds[Math.floor(Math.random()*finds.length)];state.stats.curious=clamp(state.stats.curious+16);state.stats.energy=clamp(state.stats.energy-10);state.stats.happy=clamp(state.stats.happy+8);state.coins+=Math.floor(3+Math.random()*8);state.xp+=4;save();render();openModal('Felfedezés',`<div class="card"><div class="big">🌳</div><p>${c} talált <b>${found}</b>.</p><p class="small">Kíváncsiság +16 · Boldogság +8 · XP +4</p></div>`);
+  }
+}
+document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',()=>action(b.dataset.action)));
+
+function openModal(title,body){modalTitleEl.textContent=title;modalBodyEl.innerHTML=body;modalEl.classList.add('show')}
+function closeModal(){modalEl.classList.remove('show')}
+closeModalBtn=document.getElementById('closeModal');closeModalBtn.addEventListener('click',closeModal);modalEl.addEventListener('click',e=>{if(e.target===modalEl)closeModal()});
+window.applyFeed=()=>{state.stats.hunger=clamp(state.stats.hunger+18);state.stats.happy=clamp(state.stats.happy+3);state.xp+=1;save();render();closeModal();toast('Finom volt! 😋')};
+window.applyPlay=()=>{state.stats.happy=clamp(state.stats.happy+20);state.stats.energy=clamp(state.stats.energy-8);state.stats.curious=clamp(state.stats.curious+4);state.xp+=3;save();render();closeModal();toast('Nagyon élvezte a játékot! 🎾')};
+
+setInterval(()=>{if(state.hatched){state.stats.hunger=clamp(state.stats.hunger-0.12);state.stats.energy=clamp(state.stats.energy-0.06);render()}},60000);
+render();
+</script>
+</body>
+</html>
