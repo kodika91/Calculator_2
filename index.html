@@ -27,7 +27,7 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
 .row{display:grid;grid-template-columns:24px 1fr;gap:6px;align-items:center;margin:7px 0}.label{font-size:12px;font-weight:700}.bar{height:8px;border-radius:10px;background:#ece7f2;overflow:hidden}.fill{height:100%;border-radius:10px;transition:width .4s ease}
 .day{position:absolute;right:14px;top:14px;background:#ffffffdd;padding:8px 10px;border-radius:16px;font-weight:800;font-size:13px}
 .petWrap{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);width:250px;height:250px;display:flex;align-items:center;justify-content:center}
-.pet{font-size:146px;filter:drop-shadow(0 10px 8px #0002);user-select:none;transition:transform .2s}.pet:active{transform:scale(.95)}
+.pet{width:210px;height:210px;filter:drop-shadow(0 12px 9px #0003);user-select:none;transition:transform .2s;display:flex;align-items:center;justify-content:center}.pet:active{transform:scale(.96)}.pet svg{width:100%;height:100%;overflow:visible}.rarity{position:absolute;top:70px;right:14px;background:#ffffffdc;border-radius:14px;padding:6px 9px;font-size:11px;font-weight:900;box-shadow:0 4px 12px #0001}
 .nameBubble{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:#fff;border-radius:18px;padding:7px 14px;font-weight:800;box-shadow:0 5px 14px #0001;white-space:nowrap}
 .egg{font-size:132px;animation:bob 1.3s ease-in-out infinite;filter:drop-shadow(0 10px 8px #0002)}
 @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
@@ -60,7 +60,7 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
       <div class="row"><div>⚡</div><div><div class="label">Energia</div><div class="bar"><div id="energyBar" class="fill" style="background:#57aef0"></div></div></div></div>
       <div class="row"><div>🍃</div><div><div class="label">Kíváncsiság</div><div class="bar"><div id="curiousBar" class="fill" style="background:#65c977"></div></div></div></div>
     </div>
-    <div class="day">📅 <span id="day">1</span>. nap</div>
+    <div class="day">📅 <span id="day">1</span>. nap</div><div class="rarity hidden" id="rarity"></div>
 
     <div class="petWrap" id="petWrap">
       <div class="egg" id="egg">🥚</div>
@@ -91,14 +91,76 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
 <div class="modal" id="modal"><div class="sheet"><button class="close" id="closeModal">×</button><h2 id="modalTitle"></h2><div id="modalBody"></div></div></div>
 
 <script>
-const creatures = [
-  {name:'Momo', emoji:'🐶', type:'Erdőjáró', traits:['kíváncsi','kedves'], desc:'Imád új helyeket felfedezni, és minden apróságra rácsodálkozik.'},
-  {name:'Lumi', emoji:'🐱', type:'Csillagcica', traits:['nyugodt','bújós'], desc:'Csendes, figyelmes kis társ, aki a békés pillanatokat szereti.'},
-  {name:'Piko', emoji:'🦊', type:'Rókakölyök', traits:['játékos','ravasz'], desc:'Mindig kitalál valami új játékot, és nehéz unatkozni mellette.'},
-  {name:'Nubi', emoji:'🐼', type:'Bambuszlakó', traits:['álmos','barátságos'], desc:'Lassabb tempóban él, de nagyon ragaszkodó és békés.'},
-  {name:'Zizi', emoji:'🐰', type:'Mezei ugró', traits:['vidám','energikus'], desc:'Tele van energiával, gyorsan tanul és imád mozogni.'},
-  {name:'Kumo', emoji:'🐲', type:'Mini sárkány', traits:['bátor','kíváncsi'], desc:'Kicsi, de vakmerő. Szeret kihívásokat teljesíteni.'}
+const palettes = [
+  ['#f6b6d8','#8c6ee8','#fff1a8'],['#9fe7dc','#6e83e8','#fff7f0'],['#ffd08f','#f28db2','#fff2d9'],
+  ['#a9c7ff','#7259c9','#eef7ff'],['#c4f0a7','#4d9b80','#fff8cb'],['#d9b6ff','#ff9fd0','#f8efff'],
+  ['#38405f','#8d6cff','#bff8ff'],['#ffb0a7','#7f69d9','#fff0e7']
 ];
+const traitPool=['kíváncsi','álmodozó','huncut','bújós','bátor','játékos','nyugodt','különc','energikus','félénk'];
+const rarityPool=[['Gyakori',58],['Ritka',27],['Epikus',11],['Legendás',3.3],['Mitikus',0.7]];
+const typePool=['Csillagköd-lény','Álomcsíra','Fénybolyhos','Kristályvándor','Holdpötty','Ködfiúka','Auracsíra','Szivárványőrző','Éjvirág-lény','Felhőszellem'];
+const syllA=['Lu','Mi','Zo','Ki','Ne','Ari','Pha','Tsu','Vei','No','Eli','Yuu','Sora','Kiri','Moa'];
+const syllB=['mi','ra','lo','vi','na','ko','shi','ru','li','mo','ya','ni','zu','pha','ta'];
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function weightedRarity(){let r=Math.random()*100,acc=0;for(const [n,w] of rarityPool){acc+=w;if(r<=acc)return n}return 'Gyakori'}
+function makeName(){return pick(syllA)+pick(syllB)}
+function generateCreature(){
+  const palette=pick(palettes);
+  const rarity=weightedRarity();
+  const bodyShape=Math.floor(Math.random()*4), eyeStyle=Math.floor(Math.random()*5), crown=Math.floor(Math.random()*7), side=Math.floor(Math.random()*6), tail=Math.floor(Math.random()*6), marking=Math.floor(Math.random()*5);
+  const traits=[pick(traitPool),pick(traitPool)].filter((v,i,a)=>a.indexOf(v)===i);
+  if(traits.length<2) traits.push('különc');
+  return {name:makeName(),type:pick(typePool),traits,rarity,desc:'Egy teljesen egyedi, nem létező Momo-lény. A külsejét a kikeléskor kapott véletlen tulajdonságok adják.',genes:{palette,bodyShape,eyeStyle,crown,side,tail,marking,seed:Math.floor(Math.random()*1e9)}};
+}
+function creatureSVG(c){
+  const g=c.genes||generateCreature().genes, [a,b,hi]=g.palette;
+  const bodyPaths=[
+    'M55 114 C45 74 69 42 106 43 C143 44 166 73 157 115 C149 151 132 169 106 170 C79 169 62 151 55 114Z',
+    'M48 112 C50 69 72 47 106 48 C139 46 160 70 164 111 C168 151 145 170 106 169 C67 171 45 151 48 112Z',
+    'M57 101 C61 61 81 42 106 42 C132 42 153 61 157 101 L166 137 C151 160 133 171 106 171 C78 171 61 160 46 137Z',
+    'M52 113 C38 85 63 50 94 48 C105 30 122 36 126 51 C156 56 171 85 159 116 C148 149 135 170 105 170 C75 170 63 149 52 113Z'];
+  const sideShapes=[
+    `<path d="M61 74 C35 55 25 68 47 94Z" fill="${b}"/><path d="M151 74 C177 55 187 68 165 94Z" fill="${b}"/>`,
+    `<ellipse cx="52" cy="79" rx="17" ry="31" fill="${b}" transform="rotate(-24 52 79)"/><ellipse cx="160" cy="79" rx="17" ry="31" fill="${b}" transform="rotate(24 160 79)"/>`,
+    `<path d="M58 77 Q34 46 31 81 Q39 96 58 98Z" fill="${hi}" stroke="${b}" stroke-width="5"/><path d="M154 77 Q178 46 181 81 Q173 96 154 98Z" fill="${hi}" stroke="${b}" stroke-width="5"/>`,
+    `<path d="M63 83 Q38 72 33 94 Q47 100 61 99Z" fill="${a}"/><path d="M149 83 Q174 72 179 94 Q165 100 151 99Z" fill="${a}"/>`,
+    `<circle cx="47" cy="82" r="13" fill="${hi}"/><circle cx="165" cy="82" r="13" fill="${hi}"/><circle cx="47" cy="82" r="6" fill="${b}"/><circle cx="165" cy="82" r="6" fill="${b}"/>`,
+    ''
+  ][g.side];
+  const crowns=[
+    `<path d="M88 55 Q93 25 104 51 Q114 19 122 52" fill="none" stroke="${b}" stroke-width="7" stroke-linecap="round"/>`,
+    `<path d="M89 50 L97 27 L106 48 L118 23 L125 52Z" fill="${hi}" stroke="${b}" stroke-width="4"/>`,
+    `<circle cx="106" cy="29" r="10" fill="${hi}"/><path d="M106 39 V53" stroke="${b}" stroke-width="5"/>`,
+    `<path d="M89 48 Q102 29 106 50 Q111 27 127 45" fill="none" stroke="${b}" stroke-width="6" stroke-linecap="round"/>`,
+    `<path d="M91 47 C83 29 97 20 106 42 C116 18 132 31 122 49" fill="${a}" stroke="${b}" stroke-width="4"/>`,
+    `<circle cx="88" cy="38" r="6" fill="${hi}"/><circle cx="106" cy="27" r="7" fill="${hi}"/><circle cx="125" cy="38" r="6" fill="${hi}"/><path d="M88 44 L96 54 M106 34 V51 M125 44 L117 54" stroke="${b}" stroke-width="3"/>`,
+    ''
+  ][g.crown];
+  const eyes=[
+    `<ellipse cx="86" cy="101" rx="10" ry="15" fill="#302744"/><ellipse cx="126" cy="101" rx="10" ry="15" fill="#302744"/><circle cx="82" cy="96" r="3" fill="white"/><circle cx="122" cy="96" r="3" fill="white"/>`,
+    `<path d="M76 102 Q86 91 96 102" fill="none" stroke="#302744" stroke-width="6" stroke-linecap="round"/><path d="M116 102 Q126 91 136 102" fill="none" stroke="#302744" stroke-width="6" stroke-linecap="round"/>`,
+    `<circle cx="86" cy="101" r="12" fill="#302744"/><circle cx="126" cy="101" r="7" fill="#302744"/><circle cx="82" cy="97" r="4" fill="white"/><circle cx="124" cy="99" r="2.5" fill="white"/>`,
+    `<path d="M86 87 l4 9 10 1-8 6 3 10-9-5-9 5 3-10-8-6 10-1z" fill="#302744"/><circle cx="126" cy="101" r="11" fill="#302744"/><circle cx="122" cy="97" r="3" fill="white"/>`,
+    `<ellipse cx="86" cy="101" rx="11" ry="16" fill="${b}"/><ellipse cx="126" cy="101" rx="11" ry="16" fill="${b}"/><ellipse cx="86" cy="104" rx="5" ry="9" fill="#302744"/><ellipse cx="126" cy="104" rx="5" ry="9" fill="#302744"/><circle cx="83" cy="96" r="3" fill="white"/><circle cx="123" cy="96" r="3" fill="white"/>`
+  ][g.eyeStyle];
+  const tails=[
+    `<path d="M153 139 Q195 129 178 96 Q205 113 189 151 Q171 170 151 157" fill="${b}" stroke="${hi}" stroke-width="5"/>`,
+    `<path d="M153 145 Q191 156 183 185 Q170 169 148 162" fill="none" stroke="${b}" stroke-width="12" stroke-linecap="round"/>`,
+    `<path d="M153 145 Q187 131 190 151 Q184 169 156 162Z" fill="${hi}" stroke="${b}" stroke-width="5"/>`,
+    `<path d="M153 145 Q190 123 194 147 Q176 153 157 162" fill="none" stroke="${b}" stroke-width="7"/><circle cx="195" cy="146" r="10" fill="${hi}"/>`,
+    `<path d="M153 145 Q183 154 181 179 Q162 170 149 160" fill="${a}" stroke="${b}" stroke-width="5"/>`,
+    ''
+  ][g.tail];
+  const marks=[
+    `<circle cx="106" cy="126" r="9" fill="${hi}" opacity=".8"/>`,
+    `<path d="M98 125 Q106 114 114 125 Q106 137 98 125Z" fill="${hi}"/>`,
+    `<circle cx="75" cy="121" r="6" fill="${b}" opacity=".5"/><circle cx="137" cy="121" r="6" fill="${b}" opacity=".5"/>`,
+    `<path d="M84 132 Q106 143 128 132" fill="none" stroke="${hi}" stroke-width="5" stroke-linecap="round"/>`,
+    ''
+  ][g.marking];
+  const aura=c.rarity==='Mitikus'||c.rarity==='Legendás'?`<circle cx="106" cy="108" r="92" fill="none" stroke="${hi}" stroke-width="3" stroke-dasharray="4 10" opacity=".8"><animateTransform attributeName="transform" type="rotate" from="0 106 108" to="360 106 108" dur="8s" repeatCount="indefinite"/></circle>`:'';
+  return `<svg viewBox="0 0 212 212" role="img" aria-label="${c.name}, egyedi fantasy lény">${aura}${tail}<ellipse cx="106" cy="174" rx="50" ry="12" fill="#4f42511e"/>${sideShapes}${crowns}<path d="${bodyPaths[g.bodyShape]}" fill="${a}" stroke="${b}" stroke-width="6" stroke-linejoin="round"/>${marks}${eyes}<path d="M99 122 Q106 128 113 122" fill="none" stroke="#523d58" stroke-width="4" stroke-linecap="round"/><circle cx="72" cy="119" r="7" fill="#ff9eb7" opacity=".45"/><circle cx="140" cy="119" r="7" fill="#ff9eb7" opacity=".45"/><circle cx="72" cy="63" r="5" fill="${hi}" opacity=".8"><animate attributeName="opacity" values=".2;1;.2" dur="2s" repeatCount="indefinite"/></circle></svg>`;
+}
 
 const defaults = {hatched:false, creature:null, stats:{hunger:72,happy:62,energy:78,curious:48},coins:120,day:1,lastSeen:Date.now(),xp:0};
 const coinsEl=document.getElementById('coins');
@@ -117,6 +179,7 @@ const traitsEl=document.getElementById('traits');
 const modalEl=document.getElementById('modal');
 const modalTitleEl=document.getElementById('modalTitle');
 const modalBodyEl=document.getElementById('modalBody');
+const rarityEl=document.getElementById('rarity');
 let state = load();
 
 function load(){
@@ -140,11 +203,13 @@ function render(){
   hungerBarEl.style.width=state.stats.hunger+'%'; happyBarEl.style.width=state.stats.happy+'%'; energyBarEl.style.width=state.stats.energy+'%'; curiousBarEl.style.width=state.stats.curious+'%';
   if(state.hatched && state.creature){
     eggEl.classList.add('hidden'); petEl.classList.remove('hidden'); nameBubbleEl.classList.remove('hidden'); hatchTextEl.classList.add('hidden');
-    petEl.textContent=state.creature.emoji; nameBubbleEl.textContent=state.creature.name+' ♡';
+    if(!state.creature.genes){state.creature=generateCreature();}
+    petEl.innerHTML=creatureSVG(state.creature); nameBubbleEl.textContent=state.creature.name+' ♡';
+    rarityEl.textContent='✦ '+state.creature.rarity; rarityEl.classList.remove('hidden');
     petTitleEl.textContent=state.creature.name+' – '+state.creature.type; petDescEl.textContent=state.creature.desc;
     traitsEl.innerHTML=state.creature.traits.map(t=>`<div class="chip">${t}</div>`).join('')+`<div class="chip">XP ${state.xp}</div>`;
   } else {
-    eggEl.classList.remove('hidden'); petEl.classList.add('hidden'); nameBubbleEl.classList.add('hidden'); hatchTextEl.classList.remove('hidden');
+    eggEl.classList.remove('hidden'); petEl.classList.add('hidden'); nameBubbleEl.classList.add('hidden'); hatchTextEl.classList.remove('hidden'); rarityEl.classList.add('hidden');
   }
   save();
 }
@@ -153,7 +218,7 @@ function hatch(){
   if(state.hatched)return;
   eggEl.style.animation='none';
   let n=0; const seq=['🥚','✨','🥚','💫','🥚','🌟'];
-  const t=setInterval(()=>{eggEl.textContent=seq[n++%seq.length]; if(n>8){clearInterval(t); state.creature=creatures[Math.floor(Math.random()*creatures.length)];state.hatched=true;state.stats={hunger:80,happy:82,energy:88,curious:60};state.xp=0;save();render();toast('Kikelt '+state.creature.name+'! ♡');}},170);
+  const t=setInterval(()=>{eggEl.textContent=seq[n++%seq.length]; if(n>8){clearInterval(t); state.creature=generateCreature();state.hatched=true;state.stats={hunger:80,happy:82,energy:88,curious:60};state.xp=0;save();render();toast('Kikelt '+state.creature.name+'! ♡');}},170);
 }
 eggEl.addEventListener('click',hatch);hatchTextEl.addEventListener('click',hatch);
 
@@ -182,6 +247,7 @@ closeModalBtn=document.getElementById('closeModal');closeModalBtn.addEventListen
 window.applyFeed=()=>{state.stats.hunger=clamp(state.stats.hunger+18);state.stats.happy=clamp(state.stats.happy+3);state.xp+=1;save();render();closeModal();toast('Finom volt! 😋')};
 window.applyPlay=()=>{state.stats.happy=clamp(state.stats.happy+20);state.stats.energy=clamp(state.stats.energy-8);state.stats.curious=clamp(state.stats.curious+4);state.xp+=3;save();render();closeModal();toast('Nagyon élvezte a játékot! 🎾')};
 
+// gentle live decay while open
 setInterval(()=>{if(state.hatched){state.stats.hunger=clamp(state.stats.hunger-0.12);state.stats.energy=clamp(state.stats.energy-0.06);render()}},60000);
 render();
 </script>
